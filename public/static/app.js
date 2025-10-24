@@ -32,14 +32,24 @@ async function loadApostleTypes() {
         
         const container = document.getElementById('apostleTypes');
         container.innerHTML = types.map(type => `
-            <div class="apostle-card bg-white p-6 rounded-lg shadow-md border-2 border-purple-200">
-                <div class="text-4xl text-center mb-3">${type.icon}</div>
-                <h3 class="text-xl font-bold text-purple-700 mb-2 text-center">${type.name_ja}</h3>
-                <p class="text-sm text-gray-600 mb-3 text-center">${type.name_en}</p>
-                <p class="text-gray-700 mb-3">${type.description}</p>
-                <div class="text-sm">
-                    <p class="mb-1"><strong class="text-purple-600">特徴:</strong> ${type.characteristics}</p>
-                    <p><strong class="text-purple-600">強み:</strong> ${type.strengths}</p>
+            <div class="apostle-card p-6 rounded-3xl shadow-lg border-2 border-purple-200">
+                <div class="text-5xl text-center mb-4 icon-float">${type.icon}</div>
+                <h3 class="text-xl font-bold mb-2 text-center bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+                    ${type.name_en.split(' - ')[0]}
+                </h3>
+                <p class="text-sm text-gray-500 mb-3 text-center font-semibold">
+                    ${type.name_en.split(' - ')[1] || type.name_en}
+                </p>
+                <p class="text-gray-600 mb-4 text-sm leading-relaxed">${type.description}</p>
+                <div class="text-xs space-y-2 bg-purple-50 p-3 rounded-xl">
+                    <p class="flex items-start">
+                        <span class="text-purple-600 mr-2">✨</span>
+                        <span><strong>Traits:</strong> ${type.characteristics}</span>
+                    </p>
+                    <p class="flex items-start">
+                        <span class="text-purple-600 mr-2">💪</span>
+                        <span><strong>Strengths:</strong> ${type.strengths}</span>
+                    </p>
                 </div>
             </div>
         `).join('');
@@ -125,52 +135,75 @@ function displayResult(data) {
     const { apostleType, confidence, analysisDetails } = data;
     
     const resultHTML = `
-        <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-8 rounded-lg mb-6">
-            <div class="text-6xl text-center mb-4">${apostleType.icon}</div>
-            <h3 class="text-3xl font-bold text-purple-800 text-center mb-2">${apostleType.name_ja}</h3>
-            <p class="text-xl text-gray-600 text-center mb-4">${apostleType.name_en}</p>
-            <p class="text-lg text-gray-700 mb-4 text-center">${apostleType.description}</p>
+        <div class="bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50 p-8 md:p-10 rounded-3xl mb-6 border-2 border-purple-200">
+            <div class="text-7xl text-center mb-6 icon-float">${apostleType.icon}</div>
+            <h3 class="text-4xl font-extrabold text-center mb-3">
+                <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+                    ${apostleType.name_en.split(' - ')[0]}
+                </span>
+            </h3>
+            <p class="text-xl text-center mb-2 font-semibold text-gray-600">
+                ${apostleType.name_en.split(' - ')[1] || apostleType.name_en}
+            </p>
+            <p class="text-lg text-gray-600 mb-6 text-center leading-relaxed">${apostleType.description}</p>
             
-            <div class="bg-white p-6 rounded-lg shadow-md mb-4">
-                <h4 class="text-xl font-bold text-purple-700 mb-3">
-                    <i class="fas fa-star mr-2"></i>あなたの特徴
+            <div class="bg-white p-6 rounded-2xl shadow-lg mb-4 border-2 border-purple-100">
+                <h4 class="text-xl font-bold mb-4 flex items-center justify-center">
+                    <span class="text-2xl mr-2">✨</span>
+                    <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+                        Your Traits
+                    </span>
                 </h4>
-                <p class="text-gray-700 mb-3"><strong>性格:</strong> ${apostleType.characteristics}</p>
-                <p class="text-gray-700 mb-3"><strong>強み:</strong> ${apostleType.strengths}</p>
-                <div class="mt-4 pt-4 border-t border-gray-200">
-                    <p class="text-sm text-gray-600">
-                        <i class="fas fa-chart-line mr-2"></i>
-                        診断精度: ${(confidence * 100).toFixed(1)}%
+                <div class="space-y-3 text-gray-700">
+                    <p class="flex items-start bg-purple-50 p-3 rounded-xl">
+                        <span class="text-purple-600 mr-2 mt-1">💫</span>
+                        <span><strong>Personality:</strong> ${apostleType.characteristics}</span>
+                    </p>
+                    <p class="flex items-start bg-pink-50 p-3 rounded-xl">
+                        <span class="text-pink-600 mr-2 mt-1">💪</span>
+                        <span><strong>Strengths:</strong> ${apostleType.strengths}</span>
+                    </p>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-200 text-center">
+                    <p class="text-sm text-gray-600 font-semibold">
+                        <i class="fas fa-chart-line mr-2 text-purple-500"></i>
+                        Accuracy: ${(confidence * 100).toFixed(1)}%
                     </p>
                 </div>
             </div>
             
-            <div class="bg-white p-6 rounded-lg shadow-md mb-4">
-                <h4 class="text-xl font-bold text-purple-700 mb-3">
-                    <i class="fas fa-hand-sparkles mr-2"></i>手相分析詳細
+            <div class="bg-white p-6 rounded-2xl shadow-lg mb-4 border-2 border-purple-100">
+                <h4 class="text-xl font-bold mb-4 flex items-center justify-center">
+                    <span class="text-2xl mr-2">🤲</span>
+                    <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+                        Palm Analysis
+                    </span>
                 </h4>
-                <div class="space-y-2 text-gray-700">
-                    <p><strong>感情線:</strong> ${analysisDetails.heart_line}</p>
-                    <p><strong>知能線:</strong> ${analysisDetails.head_line}</p>
-                    <p><strong>生命線:</strong> ${analysisDetails.life_line}</p>
-                    <p><strong>運命線:</strong> ${analysisDetails.fate_line}</p>
+                <div class="space-y-3 text-gray-700 text-sm">
+                    <p class="bg-purple-50 p-3 rounded-xl"><strong>Heart Line:</strong> ${analysisDetails.heart_line}</p>
+                    <p class="bg-blue-50 p-3 rounded-xl"><strong>Head Line:</strong> ${analysisDetails.head_line}</p>
+                    <p class="bg-green-50 p-3 rounded-xl"><strong>Life Line:</strong> ${analysisDetails.life_line}</p>
+                    <p class="bg-pink-50 p-3 rounded-xl"><strong>Fate Line:</strong> ${analysisDetails.fate_line}</p>
                 </div>
             </div>
             
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h4 class="text-xl font-bold text-purple-700 mb-3">
-                    <i class="fas fa-heart mr-2"></i>相性の良いタイプ
+            <div class="bg-white p-6 rounded-2xl shadow-lg border-2 border-purple-100">
+                <h4 class="text-xl font-bold mb-4 flex items-center justify-center">
+                    <span class="text-2xl mr-2">💕</span>
+                    <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+                        Compatible Types
+                    </span>
                 </h4>
-                <p class="text-gray-700">
+                <p class="text-gray-700 text-center leading-relaxed">
                     ${getCompatibleTypesText(apostleType.compatible_types)}
                 </p>
             </div>
         </div>
         
-        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
-            <p class="text-blue-800">
-                <i class="fas fa-info-circle mr-2"></i>
-                この診断結果を使って、他の人とチームを組むことができます！
+        <div class="bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-purple-500 p-5 rounded-xl">
+            <p class="text-gray-700 flex items-center">
+                <i class="fas fa-info-circle mr-3 text-purple-500 text-xl"></i>
+                <span class="font-semibold">You can form teams with others using this result! 🎉</span>
             </p>
         </div>
     `;
