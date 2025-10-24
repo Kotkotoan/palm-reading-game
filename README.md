@@ -61,7 +61,7 @@
 
 - **開発環境**: https://3000-icn33dzxs3u4bhodzvd6l-82b888ba.sandbox.novita.ai
 - **本番環境**: （デプロイ後に追加）
-- **GitHub**: （リポジトリ作成後に追加）
+- **GitHub**: https://github.com/Kotkotoan/palm-reading-game
 
 ## 📊 主要なAPIエンドポイント
 
