@@ -4,25 +4,12 @@ let currentReading = null;
 
 // ページ読み込み時の初期化
 document.addEventListener('DOMContentLoaded', async () => {
-    // データベース初期化
-    await initDatabase();
-    
     // 使徒タイプ一覧の読み込み
     await loadApostleTypes();
     
     // イベントリスナーの設定
     setupEventListeners();
 });
-
-// データベース初期化
-async function initDatabase() {
-    try {
-        const response = await axios.post('/api/init-db');
-        console.log('Database initialized:', response.data);
-    } catch (error) {
-        console.error('Database initialization error:', error);
-    }
-}
 
 // 使徒タイプ一覧の読み込み
 async function loadApostleTypes() {
@@ -123,7 +110,23 @@ async function analyzePalm() {
         
     } catch (error) {
         console.error('Analysis error:', error);
-        alert('診断中にエラーが発生しました。もう一度お試しください。');
+        let errorMessage = 'An error occurred during analysis. Please try again.';
+        
+        if (error.response) {
+            // サーバーからのエラーレスポンス
+            console.error('Server error:', error.response.data);
+            errorMessage = `Error: ${error.response.data.error || error.response.statusText}`;
+        } else if (error.request) {
+            // リクエストが送信されたがレスポンスがない
+            console.error('No response:', error.request);
+            errorMessage = 'No response from server. Please check your connection.';
+        } else {
+            // リクエストの設定中にエラー
+            console.error('Request error:', error.message);
+            errorMessage = `Request error: ${error.message}`;
+        }
+        
+        alert(errorMessage);
         resetForm();
     } finally {
         document.getElementById('loading').classList.remove('active');
