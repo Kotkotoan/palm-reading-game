@@ -41,13 +41,12 @@ app.post('/api/analyze-palm', async (c) => {
     // 画像分析（簡易版 - 実際にはAI画像分析APIを使用）
     const analysisResult = await analyzePalmImage(imageData);
     
-    // 診断結果を保存
+    // 診断結果を保存（画像データは保存しない - 大きすぎるため）
     const readingResult = await DB.prepare(
-      'INSERT INTO palm_readings (user_id, apostle_type_id, palm_image_url, analysis_data, confidence_score) VALUES (?, ?, ?, ?, ?) RETURNING id'
+      'INSERT INTO palm_readings (user_id, apostle_type_id, analysis_data, confidence_score) VALUES (?, ?, ?, ?) RETURNING id'
     ).bind(
       userId,
       analysisResult.apostleTypeId,
-      imageData,
       JSON.stringify(analysisResult.details),
       analysisResult.confidence
     ).first();
