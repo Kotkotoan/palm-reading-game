@@ -147,27 +147,33 @@ function displayResult(data) {
             </p>
             <p class="text-lg text-gray-600 mb-6 text-center leading-relaxed">${apostleType.description}</p>
             
+            <!-- 詳細な性格分析 -->
             <div class="bg-white p-6 rounded-2xl shadow-lg mb-4 border-2 border-purple-100">
-                <h4 class="text-xl font-bold mb-4 flex items-center justify-center">
-                    <span class="text-2xl mr-2">✨</span>
+                <h4 class="text-2xl font-bold mb-4 flex items-center justify-center">
+                    <span class="text-3xl mr-2">🌟</span>
                     <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-                        Your Traits
+                        Detailed Personality Analysis
                     </span>
                 </h4>
+                <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-5 rounded-xl mb-4">
+                    <p class="text-gray-700 leading-relaxed text-base">
+                        ${apostleType.detailed_personality || apostleType.description}
+                    </p>
+                </div>
                 <div class="space-y-3 text-gray-700">
                     <p class="flex items-start bg-purple-50 p-3 rounded-xl">
                         <span class="text-purple-600 mr-2 mt-1">💫</span>
-                        <span><strong>Personality:</strong> ${apostleType.characteristics}</span>
+                        <span><strong>Key Traits:</strong> ${apostleType.characteristics}</span>
                     </p>
                     <p class="flex items-start bg-pink-50 p-3 rounded-xl">
                         <span class="text-pink-600 mr-2 mt-1">💪</span>
-                        <span><strong>Strengths:</strong> ${apostleType.strengths}</span>
+                        <span><strong>Core Strengths:</strong> ${apostleType.strengths}</span>
                     </p>
                 </div>
                 <div class="mt-4 pt-4 border-t border-gray-200 text-center">
                     <p class="text-sm text-gray-600 font-semibold">
                         <i class="fas fa-chart-line mr-2 text-purple-500"></i>
-                        Accuracy: ${(confidence * 100).toFixed(1)}%
+                        Analysis Accuracy: ${(confidence * 100).toFixed(1)}%
                     </p>
                 </div>
             </div>
@@ -184,6 +190,68 @@ function displayResult(data) {
                     <p class="bg-blue-50 p-3 rounded-xl"><strong>Head Line:</strong> ${analysisDetails.head_line}</p>
                     <p class="bg-green-50 p-3 rounded-xl"><strong>Life Line:</strong> ${analysisDetails.life_line}</p>
                     <p class="bg-pink-50 p-3 rounded-xl"><strong>Fate Line:</strong> ${analysisDetails.fate_line}</p>
+                </div>
+            </div>
+            
+            <!-- 未来予測: 2026-2050 -->
+            <div class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6 rounded-2xl shadow-lg mb-4 border-2 border-indigo-200">
+                <h4 class="text-2xl font-bold mb-6 flex items-center justify-center">
+                    <span class="text-3xl mr-2">🔮</span>
+                    <span class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                        Your Future Path (2026-2050)
+                    </span>
+                </h4>
+                
+                <!-- 2026-2028: 近未来 -->
+                <div class="mb-5">
+                    <div class="flex items-center mb-3">
+                        <span class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-2 rounded-full text-sm font-bold mr-3">
+                            2026 - 2028
+                        </span>
+                        <span class="text-gray-600 font-semibold">Near Future</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border-l-4 border-blue-400">
+                        <p class="text-gray-700 leading-relaxed text-sm">
+                            ${apostleType.future_2026_2028 || '近未来において、あなたの特性は社会変化の中で重要な役割を果たします。テクノロジーの進化と人間性のバランスを取りながら、新しい時代に適応していくでしょう。'}
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 2029-2035: 中期未来 -->
+                <div class="mb-5">
+                    <div class="flex items-center mb-3">
+                        <span class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-bold mr-3">
+                            2029 - 2035
+                        </span>
+                        <span class="text-gray-600 font-semibold">Mid-term Future</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border-l-4 border-purple-400">
+                        <p class="text-gray-700 leading-relaxed text-sm">
+                            ${apostleType.future_2029_2035 || '2030年代には、あなたの能力がさらに重要性を増します。社会システムの変革期において、あなたの特性が新しい価値を創造します。'}
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 2036-2050: 長期未来 -->
+                <div>
+                    <div class="flex items-center mb-3">
+                        <span class="bg-gradient-to-r from-pink-500 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold mr-3">
+                            2036 - 2050
+                        </span>
+                        <span class="text-gray-600 font-semibold">Long-term Future</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border-l-4 border-pink-400">
+                        <p class="text-gray-700 leading-relaxed text-sm">
+                            ${apostleType.future_2036_2050 || '2040年代以降、人類社会は大きな転換点を迎えます。あなたの資質は、新しい時代を築く基盤となり、未来世代への遺産となるでしょう。'}
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="mt-5 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-orange-200">
+                    <p class="text-sm text-gray-600 text-center">
+                        <i class="fas fa-lightbulb mr-2 text-orange-500"></i>
+                        <strong>Note:</strong> This forecast is based on current macro social trends and your personality analysis.
+                    </p>
                 </div>
             </div>
             

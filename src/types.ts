@@ -11,6 +11,10 @@ export interface ApostleType {
   strengths: string;
   compatible_types: string;
   icon: string;
+  detailed_personality?: string;
+  future_2026_2028?: string;
+  future_2029_2035?: string;
+  future_2036_2050?: string;
 }
 
 export interface User {
