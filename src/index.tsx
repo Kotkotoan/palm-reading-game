@@ -327,6 +327,225 @@ app.post('/api/join-team', async (c) => {
   }
 });
 
+// プレミアムステータス確認
+app.get('/api/check-premium/:userId', async (c) => {
+  const { DB } = c.env;
+  const userId = c.req.param('userId');
+  
+  try {
+    const purchase = await DB.prepare(
+      'SELECT id FROM premium_purchases WHERE user_id = ? AND status = ? LIMIT 1'
+    ).bind(userId, 'completed').first();
+    
+    return c.json({ isPremium: !!purchase });
+  } catch (error) {
+    return c.json({ error: String(error) }, 500);
+  }
+});
+
+// Stripe Checkout セッション作成（デモ用 - 実際はStripe APIキーが必要）
+app.post('/api/create-checkout-session', async (c) => {
+  const { DB } = c.env;
+  
+  try {
+    const body = await c.req.json();
+    const { userId } = body;
+    
+    // 注意: 実際の実装ではStripe APIを使用
+    // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+    // const session = await stripe.checkout.sessions.create({...});
+    
+    // デモ用: 決済ページのシミュレーション
+    const purchaseId = Date.now();
+    
+    // 購入レコード作成（pending状態）
+    await DB.prepare(
+      'INSERT INTO premium_purchases (user_id, payment_method, payment_id, amount, currency, status) VALUES (?, ?, ?, ?, ?, ?)'
+    ).bind(userId, 'stripe', `demo_${purchaseId}`, 500, 'JPY', 'pending').run();
+    
+    // デモ用: 即座に完了状態にする（本番では webhook で処理）
+    await DB.prepare(
+      'UPDATE premium_purchases SET status = ? WHERE payment_id = ?'
+    ).bind('completed', `demo_${purchaseId}`).run();
+    
+    return c.json({ 
+      checkoutUrl: `/payment-success?session_id=demo_${purchaseId}&user_id=${userId}`,
+      message: 'Demo: Payment would be processed via Stripe'
+    });
+  } catch (error) {
+    return c.json({ error: String(error) }, 500);
+  }
+});
+
+// PayPal注文作成（デモ用 - 実際はPayPal APIが必要）
+app.post('/api/create-paypal-order', async (c) => {
+  const { DB } = c.env;
+  
+  try {
+    const body = await c.req.json();
+    const { userId } = body;
+    
+    // 注意: 実際の実装ではPayPal APIを使用
+    // const paypal = require('@paypal/checkout-server-sdk');
+    
+    // デモ用
+    const purchaseId = Date.now();
+    
+    // 購入レコード作成（pending状態）
+    await DB.prepare(
+      'INSERT INTO premium_purchases (user_id, payment_method, payment_id, amount, currency, status) VALUES (?, ?, ?, ?, ?, ?)'
+    ).bind(userId, 'paypal', `demo_pp_${purchaseId}`, 5, 'USD', 'pending').run();
+    
+    // デモ用: 即座に完了状態にする
+    await DB.prepare(
+      'UPDATE premium_purchases SET status = ? WHERE payment_id = ?'
+    ).bind('completed', `demo_pp_${purchaseId}`).run();
+    
+    return c.json({ 
+      approvalUrl: `/payment-success?order_id=demo_pp_${purchaseId}&user_id=${userId}`,
+      message: 'Demo: Payment would be processed via PayPal'
+    });
+  } catch (error) {
+    return c.json({ error: String(error) }, 500);
+  }
+});
+
+// 仕事の相性データ取得
+app.get('/api/work-compatibility/:typeId', async (c) => {
+  const typeId = parseInt(c.req.param('typeId'));
+  
+  // デモ用の仕事相性データ
+  const workCompatibilityData: Record<number, any> = {
+    1: { // Peter - Leader
+      compatibleBoss: 'ビジョンを持ち、自主性を尊重する上司。戦略型（ヤコブ）や分析型（マタイ）との相性が良い。',
+      compatibleSubordinate: 'サポート型（アンデレ）や共感型（ヨハネ）など、チームワークを重視するメンバー。',
+      companyCulture: '革新的で挑戦を奨励する文化。スタートアップや成長企業に向いている。',
+      recommendedIndustries: 'テクノロジー、コンサルティング、プロジェクトマネジメント、起業家'
+    },
+    2: { // John - Empath
+      compatibleBoss: '人間関係を大切にし、メンバーの成長を支援する上司。リーダー型（ペテロ）や調和型（ユダ）。',
+      compatibleSubordinate: '多様なタイプと相性が良いが、特に創造型（バルトロマイ）や探求型（フィリポ）。',
+      companyCulture: '協調性と共感を重視する文化。人材育成や社会貢献に力を入れる企業。',
+      recommendedIndustries: 'カウンセリング、人事、教育、医療、NPO・NGO'
+    },
+    3: { // Andrew - Supporter
+      compatibleBoss: 'チームワークを重視し、サポートを評価する上司。リーダー型（ペテロ）や戦略型（ヤコブ）。',
+      compatibleSubordinate: '探求型（フィリポ）や慎重型（トマス）など、細部に注意を払うメンバー。',
+      companyCulture: 'チームワークと相互支援を重視する文化。安定した組織や協同組合。',
+      recommendedIndustries: 'サポート業務、アシスタント、事務、顧客サービス、チームコーディネーター'
+    },
+    4: { // James - Strategist
+      compatibleBoss: '論理的で目標志向の上司。分析型（マタイ）や慎重型（トマス）との相性が良い。',
+      compatibleSubordinate: '共感型（ヨハネ）やバランス型（マティア）など、異なる視点を持つメンバー。',
+      companyCulture: '戦略的思考とデータ駆動を重視する文化。コンサルティングファームや金融機関。',
+      recommendedIndustries: '戦略コンサルティング、金融、経営企画、ビジネスアナリスト'
+    },
+    5: { // Philip - Explorer
+      compatibleBoss: '学習と成長を奨励する上司。創造型（バルトロマイ）や分析型（マタイ）。',
+      compatibleSubordinate: 'サポート型（アンデレ）や情熱型（シモン）など、実行力のあるメンバー。',
+      companyCulture: 'イノベーションと学習を重視する文化。研究機関やテクノロジー企業。',
+      recommendedIndustries: '研究開発、データサイエンス、マーケティングリサーチ、教育'
+    },
+    6: { // Bartholomew - Creator
+      compatibleBoss: '創造性を尊重し、自由度の高い上司。共感型（ヨハネ）や戦略型（ヤコブ）。',
+      compatibleSubordinate: '調和型（ユダ）やバランス型（マティア）など、実現をサポートするメンバー。',
+      companyCulture: 'クリエイティビティと革新を重視する文化。広告代理店やデザインスタジオ。',
+      recommendedIndustries: 'デザイン、広告、マーケティング、アート、製品開発'
+    },
+    7: { // Matthew - Analyst
+      compatibleBoss: '品質と正確性を重視する上司。リーダー型（ペテロ）や戦略型（ヤコブ）。',
+      compatibleSubordinate: '探求型（フィリポ）やバランス型（マティア）など、データを扱うメンバー。',
+      companyCulture: '正確性と品質管理を重視する文化。製造業や金融機関。',
+      recommendedIndustries: 'データ分析、会計、品質管理、監査、研究'
+    },
+    8: { // Thomas - Careful
+      compatibleBoss: 'リスク管理を重視する上司。サポート型（アンデレ）や調和型（ユダ）。',
+      compatibleSubordinate: '情熱型（シモン）や探求型（フィリポ）など、行動力のあるメンバーをバランス。',
+      companyCulture: '慎重さと安全性を重視する文化。医療機関や規制産業。',
+      recommendedIndustries: 'リスク管理、コンプライアンス、品質保証、セキュリティ'
+    },
+    9: { // Jude - Harmonizer
+      compatibleBoss: 'バランスと調和を重視する上司。戦略型（ヤコブ）や慎重型（トマス）。',
+      compatibleSubordinate: '創造型（バルトロマイ）や忠実型（小ヤコブ）など、多様なメンバーを統合。',
+      companyCulture: 'ダイバーシティと調和を重視する文化。グローバル企業や多国籍組織。',
+      recommendedIndustries: '人事、組織開発、調停、外交、プロジェクト調整'
+    },
+    10: { // Simon - Passionate
+      compatibleBoss: '熱意と行動力を評価する上司。探求型（フィリポ）や慎重型（トマス）がバランスを取る。',
+      compatibleSubordinate: 'バランス型（マティア）や忠実型（小ヤコブ）など、安定をもたらすメンバー。',
+      companyCulture: 'エネルギッシュで挑戦的な文化。スポーツ産業やベンチャー企業。',
+      recommendedIndustries: '営業、マーケティング、起業、イベント企画、スポーツ'
+    },
+    11: { // James the Less - Faithful
+      compatibleBoss: '信頼と継続性を重視する上司。創造型（バルトロマイ）や調和型（ユダ）。',
+      compatibleSubordinate: 'バランス型（マティア）や慎重型（トマス）など、安定志向のメンバー。',
+      companyCulture: '伝統と信頼を重視する文化。老舗企業や公共機関。',
+      recommendedIndustries: '管理業務、公務員、銀行、保険、継続性が求められる職種'
+    },
+    12: { // Matthias - Balanced
+      compatibleBoss: '柔軟性と適応力を評価する上司。分析型（マタイ）や情熱型（シモン）。',
+      compatibleSubordinate: 'すべてのタイプと相性が良く、橋渡し役として機能。',
+      companyCulture: '多様性と適応性を重視する文化。コンサルティングやプロジェクトベース企業。',
+      recommendedIndustries: 'プロジェクトマネジメント、コンサルティング、人材配置、ファシリテーター'
+    }
+  };
+  
+  const data = workCompatibilityData[typeId] || {
+    compatibleBoss: 'あなたのタイプに合った上司の情報を準備中です。',
+    compatibleSubordinate: 'あなたのタイプに合った部下の情報を準備中です。',
+    companyCulture: 'あなたのタイプに合った会社文化の情報を準備中です。',
+    recommendedIndustries: 'あなたのタイプに合った業種・職種の情報を準備中です。'
+  };
+  
+  return c.json(data);
+});
+
+// 決済成功ページ
+app.get('/payment-success', (c) => {
+  const sessionId = c.req.query('session_id') || c.req.query('order_id');
+  const userId = c.req.query('user_id');
+  
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Payment Success</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <style>
+          body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+          }
+        </style>
+    </head>
+    <body class="flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-8 md:p-12 max-w-md w-full text-center shadow-2xl">
+            <div class="text-6xl mb-6">🎉</div>
+            <h1 class="text-3xl font-extrabold mb-4">
+                <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+                    購入完了！
+                </span>
+            </h1>
+            <p class="text-gray-600 mb-6 leading-relaxed">
+                プレミアム版へのアップグレードが完了しました。<br>
+                詳細な分析とキャリアアドバイスをお楽しみください！
+            </p>
+            <a href="/?user_id=${userId}" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-4 px-8 rounded-xl transition transform hover:scale-105 inline-block">
+                <i class="fas fa-home mr-2"></i>
+                診断結果に戻る
+            </a>
+            <p class="text-xs text-gray-400 mt-6">
+                Transaction ID: ${sessionId}
+            </p>
+        </div>
+    </body>
+    </html>
+  `);
+});
+
 // 簡易的な手相分析ロジック（実際にはAI画像分析を使用）
 async function analyzePalmImage(imageData: string) {
   // Base64画像データから特徴を抽出（簡易版）

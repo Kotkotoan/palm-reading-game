@@ -370,16 +370,74 @@ function displayResult(data) {
                 </div>
             </div>
             
-            <div class="bg-white p-6 rounded-2xl shadow-lg border-2 border-purple-100">
+            <!-- 仕事の相性診断 (プレミアム機能) -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg border-2 border-purple-100 relative">
                 <h4 class="text-xl font-bold mb-4 flex items-center justify-center">
-                    <span class="text-2xl mr-2">💕</span>
+                    <span class="text-2xl mr-2">💼</span>
                     <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-                        ${currentLang === 'ja' ? '相性の良いタイプ' : 'Compatible Types'}
+                        ${currentLang === 'ja' ? '仕事の相性診断' : 'Work Compatibility Analysis'}
                     </span>
                 </h4>
-                <p class="text-gray-700 text-center leading-relaxed">
-                    ${getCompatibleTypesText(apostleType.compatible_types)}
-                </p>
+                
+                <!-- プレミアムロック表示 -->
+                <div id="workCompatibilityLocked" class="text-center py-8">
+                    <div class="text-6xl mb-4">🔒</div>
+                    <p class="text-gray-600 mb-4 text-sm md:text-base px-4">
+                        ${currentLang === 'ja' 
+                            ? '詳細な仕事の相性診断はプレミアム版で確認できます' 
+                            : 'Detailed work compatibility analysis is available in Premium'}
+                    </p>
+                    <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-xl mb-4 mx-4">
+                        <p class="text-sm text-gray-700 mb-2 font-semibold">
+                            ${currentLang === 'ja' ? 'プレミアム版で分かること：' : 'Premium includes:'}
+                        </p>
+                        <ul class="text-xs md:text-sm text-gray-600 space-y-1 text-left">
+                            <li>✨ ${currentLang === 'ja' ? '相性の良い上司・部下のタイプ' : 'Compatible boss & subordinate types'}</li>
+                            <li>✨ ${currentLang === 'ja' ? '最適なチーム構成' : 'Optimal team composition'}</li>
+                            <li>✨ ${currentLang === 'ja' ? '向いている会社文化' : 'Suitable company culture'}</li>
+                            <li>✨ ${currentLang === 'ja' ? 'おすすめの業種・職種' : 'Recommended industries & roles'}</li>
+                            <li>✨ ${currentLang === 'ja' ? 'キャリア戦略アドバイス' : 'Career strategy advice'}</li>
+                        </ul>
+                    </div>
+                    <button onclick="showPremiumModal()" class="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-3 px-6 rounded-xl transition transform hover:scale-105 shadow-lg">
+                        <i class="fas fa-crown mr-2"></i>
+                        ${currentLang === 'ja' ? 'プレミアム版にアップグレード ¥500' : 'Upgrade to Premium $5'}
+                    </button>
+                </div>
+                
+                <!-- プレミアムコンテンツ（購入後表示） -->
+                <div id="workCompatibilityUnlocked" class="hidden">
+                    <div class="space-y-4 text-gray-700">
+                        <div class="bg-blue-50 p-4 rounded-xl">
+                            <h5 class="font-bold text-blue-700 mb-2 flex items-center">
+                                <i class="fas fa-user-tie mr-2"></i>
+                                ${currentLang === 'ja' ? '相性の良い上司タイプ' : 'Compatible Boss Types'}
+                            </h5>
+                            <p class="text-sm" id="compatibleBoss"></p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-xl">
+                            <h5 class="font-bold text-green-700 mb-2 flex items-center">
+                                <i class="fas fa-users mr-2"></i>
+                                ${currentLang === 'ja' ? '相性の良い部下タイプ' : 'Compatible Subordinate Types'}
+                            </h5>
+                            <p class="text-sm" id="compatibleSubordinate"></p>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-xl">
+                            <h5 class="font-bold text-purple-700 mb-2 flex items-center">
+                                <i class="fas fa-building mr-2"></i>
+                                ${currentLang === 'ja' ? '向いている会社文化' : 'Suitable Company Culture'}
+                            </h5>
+                            <p class="text-sm" id="companyCulture"></p>
+                        </div>
+                        <div class="bg-orange-50 p-4 rounded-xl">
+                            <h5 class="font-bold text-orange-700 mb-2 flex items-center">
+                                <i class="fas fa-briefcase mr-2"></i>
+                                ${currentLang === 'ja' ? 'おすすめの業種・職種' : 'Recommended Industries & Roles'}
+                            </h5>
+                            <p class="text-sm" id="recommendedIndustries"></p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -482,6 +540,9 @@ function displayResult(data) {
     
     document.getElementById('result').innerHTML = resultHTML;
     document.getElementById('step2').classList.remove('hidden');
+    
+    // プレミアムステータスをチェックしてコンテンツをアンロック
+    unlockPremiumContent();
 }
 
 // 相性の良いタイプのテキスト取得
@@ -666,5 +727,180 @@ async function joinTeamByCode() {
         console.error('Join team error:', error);
         const errorMsg = error.response?.data?.error || (currentLang === 'ja' ? 'チームへの参加に失敗しました。' : 'Failed to join team.');
         alert(`❌ ${errorMsg}`);
+    }
+}
+
+// プレミアムモーダル表示
+function showPremiumModal() {
+    const modal = document.createElement('div');
+    modal.id = 'premiumModal';
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+    modal.innerHTML = `
+        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl relative animate-fadeIn">
+            <button onclick="closePremiumModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="text-center mb-6">
+                <div class="text-6xl mb-4">👑</div>
+                <h3 class="text-2xl md:text-3xl font-extrabold mb-2">
+                    <span class="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+                        ${currentLang === 'ja' ? 'プレミアム版' : 'Premium Edition'}
+                    </span>
+                </h3>
+                <p class="text-gray-600 text-sm md:text-base">
+                    ${currentLang === 'ja' ? '詳細な分析とキャリアアドバイスをアンロック' : 'Unlock detailed analysis & career advice'}
+                </p>
+            </div>
+            
+            <div class="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-2xl mb-6">
+                <h4 class="font-bold text-purple-700 mb-3 flex items-center justify-center">
+                    <i class="fas fa-star mr-2"></i>
+                    ${currentLang === 'ja' ? 'プレミアム特典' : 'Premium Features'}
+                </h4>
+                <ul class="text-sm text-gray-700 space-y-2">
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                        <span>${currentLang === 'ja' ? '詳細な仕事の相性診断' : 'Detailed work compatibility analysis'}</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                        <span>${currentLang === 'ja' ? '未来予測の詳細レポート' : 'Detailed future prediction report'}</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                        <span>${currentLang === 'ja' ? 'キャリア戦略アドバイス' : 'Career strategy advice'}</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                        <span>${currentLang === 'ja' ? 'PDFレポートダウンロード' : 'PDF report download'}</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="text-center mb-6">
+                <p class="text-3xl font-bold text-purple-600 mb-1">
+                    ${currentLang === 'ja' ? '¥500' : '$5'}
+                </p>
+                <p class="text-xs text-gray-500">
+                    ${currentLang === 'ja' ? '買い切り・永久アクセス' : 'One-time payment, lifetime access'}
+                </p>
+            </div>
+            
+            <div class="space-y-3">
+                <button onclick="purchaseWithStripe()" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-4 px-6 rounded-xl transition transform hover:scale-105 shadow-lg flex items-center justify-center">
+                    <i class="fab fa-cc-stripe text-2xl mr-3"></i>
+                    <span>${currentLang === 'ja' ? 'クレジットカードで購入' : 'Pay with Credit Card'}</span>
+                </button>
+                
+                <button onclick="purchaseWithPayPal()" class="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-800 font-bold py-4 px-6 rounded-xl transition transform hover:scale-105 shadow-lg flex items-center justify-center">
+                    <i class="fab fa-paypal text-2xl mr-3"></i>
+                    <span>${currentLang === 'ja' ? 'PayPalで購入' : 'Pay with PayPal'}</span>
+                </button>
+            </div>
+            
+            <p class="text-xs text-gray-400 text-center mt-4">
+                <i class="fas fa-lock mr-1"></i>
+                ${currentLang === 'ja' ? '安全な決済処理' : 'Secure payment processing'}
+            </p>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+function closePremiumModal() {
+    const modal = document.getElementById('premiumModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+// Stripe決済
+async function purchaseWithStripe() {
+    if (!currentUserId) {
+        alert(currentLang === 'ja' ? 'ユーザー情報が見つかりません' : 'User information not found');
+        return;
+    }
+    
+    try {
+        // Stripe Checkout セッション作成
+        const response = await axios.post('/api/create-checkout-session', {
+            userId: currentUserId,
+            paymentMethod: 'stripe'
+        });
+        
+        // Stripeのチェックアウトページにリダイレクト
+        window.location.href = response.data.checkoutUrl;
+    } catch (error) {
+        console.error('Stripe payment error:', error);
+        alert(currentLang === 'ja' ? '決済処理に失敗しました' : 'Payment processing failed');
+    }
+}
+
+// PayPal決済
+async function purchaseWithPayPal() {
+    if (!currentUserId) {
+        alert(currentLang === 'ja' ? 'ユーザー情報が見つかりません' : 'User information not found');
+        return;
+    }
+    
+    try {
+        // PayPal注文作成
+        const response = await axios.post('/api/create-paypal-order', {
+            userId: currentUserId,
+            paymentMethod: 'paypal'
+        });
+        
+        // PayPalのチェックアウトページにリダイレクト
+        window.location.href = response.data.approvalUrl;
+    } catch (error) {
+        console.error('PayPal payment error:', error);
+        alert(currentLang === 'ja' ? '決済処理に失敗しました' : 'Payment processing failed');
+    }
+}
+
+// プレミアムステータス確認
+async function checkPremiumStatus() {
+    if (!currentUserId) return false;
+    
+    try {
+        const response = await axios.get(`/api/check-premium/${currentUserId}`);
+        return response.data.isPremium;
+    } catch (error) {
+        console.error('Premium status check error:', error);
+        return false;
+    }
+}
+
+// プレミアムコンテンツのアンロック
+async function unlockPremiumContent() {
+    const isPremium = await checkPremiumStatus();
+    
+    if (isPremium) {
+        document.getElementById('workCompatibilityLocked').classList.add('hidden');
+        document.getElementById('workCompatibilityUnlocked').classList.remove('hidden');
+        
+        // プレミアムコンテンツを読み込む
+        await loadPremiumWorkCompatibility();
+    }
+}
+
+// 仕事の相性データを読み込む
+async function loadPremiumWorkCompatibility() {
+    if (!currentReading || !currentReading.apostleType) return;
+    
+    const typeId = currentReading.apostleType.id;
+    
+    try {
+        const response = await axios.get(`/api/work-compatibility/${typeId}`);
+        const data = response.data;
+        
+        document.getElementById('compatibleBoss').textContent = data.compatibleBoss || 'Loading...';
+        document.getElementById('compatibleSubordinate').textContent = data.compatibleSubordinate || 'Loading...';
+        document.getElementById('companyCulture').textContent = data.companyCulture || 'Loading...';
+        document.getElementById('recommendedIndustries').textContent = data.recommendedIndustries || 'Loading...';
+    } catch (error) {
+        console.error('Load work compatibility error:', error);
     }
 }
