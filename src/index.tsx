@@ -150,6 +150,127 @@ app.get('/api/team/:teamId', async (c) => {
   }
 });
 
+// チーム自動形成API - 待機中のユーザーとマッチング
+app.post('/api/auto-match', async (c) => {
+  const { DB } = c.env;
+  
+  try {
+    const body = await c.req.json();
+    const { userId } = body;
+    
+    // 自分の使徒タイプを取得
+    const myReading = await DB.prepare(
+      'SELECT apostle_type_id FROM palm_readings WHERE user_id = ? ORDER BY created_at DESC LIMIT 1'
+    ).bind(userId).first();
+    
+    if (!myReading) {
+      return c.json({ error: 'Reading not found' }, 404);
+    }
+    
+    const myTypeId = myReading.apostle_type_id as number;
+    
+    // 既にチームに所属していないユーザーを取得（自分を除く）
+    const availableUsers = await DB.prepare(`
+      SELECT DISTINCT pr.user_id, pr.apostle_type_id, u.name as user_name, at.name_en, at.icon
+      FROM palm_readings pr
+      JOIN users u ON pr.user_id = u.id
+      JOIN apostle_types at ON pr.apostle_type_id = at.id
+      LEFT JOIN team_members tm ON pr.user_id = tm.user_id
+      WHERE pr.user_id != ? 
+      AND tm.user_id IS NULL
+      AND pr.id IN (
+        SELECT MAX(id) FROM palm_readings GROUP BY user_id
+      )
+      ORDER BY pr.created_at DESC
+      LIMIT 50
+    `).bind(userId).all();
+    
+    if (!availableUsers.results || availableUsers.results.length === 0) {
+      return c.json({ 
+        matched: false, 
+        message: 'No available users for matching. Be the first to wait!' 
+      });
+    }
+    
+    // バランススコア計算関数
+    const calculateTeamBalance = (typeIds: number[]) => {
+      const typeCounts = new Map<number, number>();
+      typeIds.forEach(id => typeCounts.set(id, (typeCounts.get(id) || 0) + 1));
+      
+      // 多様性スコア（異なるタイプが多いほど高い）
+      const diversityScore = typeCounts.size / 12;
+      
+      // バランススコア（均等に分散しているほど高い）
+      const maxCount = Math.max(...Array.from(typeCounts.values()));
+      const balanceScore = 1 - (maxCount / typeIds.length);
+      
+      return diversityScore * 0.6 + balanceScore * 0.4;
+    };
+    
+    // 最適なチームメンバーを選択（11人まで、合計12人のチーム）
+    const teamSize = Math.min(11, availableUsers.results.length);
+    const selectedMembers: any[] = [];
+    const typeIds = [myTypeId];
+    
+    // 貪欲法でバランスの良いメンバーを選択
+    for (let i = 0; i < teamSize && i < availableUsers.results.length; i++) {
+      let bestMember = null;
+      let bestScore = -1;
+      
+      for (const user of availableUsers.results) {
+        if (selectedMembers.find(m => m.user_id === user.user_id)) continue;
+        
+        const testTypeIds = [...typeIds, user.apostle_type_id as number];
+        const score = calculateTeamBalance(testTypeIds);
+        
+        if (score > bestScore) {
+          bestScore = score;
+          bestMember = user;
+        }
+      }
+      
+      if (bestMember) {
+        selectedMembers.push(bestMember);
+        typeIds.push(bestMember.apostle_type_id as number);
+      }
+    }
+    
+    // チームを自動作成
+    const teamName = `Team of the Divine ${new Date().toISOString().split('T')[0]}`;
+    const teamResult = await DB.prepare(
+      'INSERT INTO teams (name) VALUES (?) RETURNING id'
+    ).bind(teamName).first();
+    
+    const teamId = teamResult?.id as number;
+    
+    // 自分を追加
+    await DB.prepare(
+      'INSERT INTO team_members (team_id, user_id, apostle_type_id) VALUES (?, ?, ?)'
+    ).bind(teamId, userId, myTypeId).run();
+    
+    // 選ばれたメンバーを追加
+    for (const member of selectedMembers) {
+      await DB.prepare(
+        'INSERT INTO team_members (team_id, user_id, apostle_type_id) VALUES (?, ?, ?)'
+      ).bind(teamId, member.user_id, member.apostle_type_id).run();
+    }
+    
+    const finalScore = calculateTeamBalance(typeIds);
+    
+    return c.json({ 
+      matched: true,
+      teamId,
+      teamName,
+      memberCount: selectedMembers.length + 1,
+      balanceScore: (finalScore * 100).toFixed(1),
+      members: selectedMembers
+    });
+  } catch (error) {
+    console.error('Auto-match error:', error);
+    return c.json({ error: String(error) }, 500);
+  }
+});
+
 // 簡易的な手相分析ロジック（実際にはAI画像分析を使用）
 async function analyzePalmImage(imageData: string) {
   // Base64画像データから特徴を抽出（簡易版）
@@ -173,6 +294,192 @@ async function analyzePalmImage(imageData: string) {
   };
 }
 
+// チーム詳細ページ
+app.get('/team/:teamId', async (c) => {
+  const { DB } = c.env;
+  const teamId = c.req.param('teamId');
+  
+  try {
+    // チーム情報とメンバーを取得
+    const team = await DB.prepare('SELECT * FROM teams WHERE id = ?').bind(teamId).first();
+    
+    if (!team) {
+      return c.html('<h1>Team not found</h1>', 404);
+    }
+    
+    const members = await DB.prepare(`
+      SELECT tm.*, u.name as user_name, at.*
+      FROM team_members tm
+      JOIN users u ON tm.user_id = u.id
+      JOIN apostle_types at ON tm.apostle_type_id = at.id
+      WHERE tm.team_id = ?
+      ORDER BY tm.joined_at
+    `).bind(teamId).all();
+    
+    // タイプごとのカウント
+    const typeCounts = new Map<number, number>();
+    members.results.forEach((m: any) => {
+      const count = typeCounts.get(m.apostle_type_id) || 0;
+      typeCounts.set(m.apostle_type_id, count + 1);
+    });
+    
+    const diversityScore = ((typeCounts.size / 12) * 100).toFixed(1);
+    
+    // メンバーのHTMLを生成
+    const membersHTML = members.results.map((member: any) => `
+      <div class="apostle-card p-5 rounded-2xl shadow-lg border-2 border-purple-200">
+        <div class="text-5xl text-center mb-3 icon-float">${member.icon}</div>
+        <h3 class="text-lg font-bold text-center mb-2">
+          <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+            ${member.user_name}
+          </span>
+        </h3>
+        <p class="text-sm text-gray-600 text-center font-semibold mb-2">
+          ${member.name_en.split(' - ')[0]}
+        </p>
+        <p class="text-xs text-gray-500 text-center">
+          ${member.name_en.split(' - ')[1] || ''}
+        </p>
+      </div>
+    `).join('');
+    
+    return c.html(`
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Team: ${team.name} - The 12 Apostles</title>
+          <script src="https://cdn.tailwindcss.com"></script>
+          <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+          <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+          <style>
+            * { font-family: 'Poppins', sans-serif; }
+            body {
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+              min-height: 100vh;
+            }
+            .card {
+              backdrop-filter: blur(20px);
+              background: rgba(255, 255, 255, 0.98);
+              border-radius: 30px;
+              box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            }
+            .apostle-card {
+              transition: all 0.4s ease;
+              background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+            }
+            .apostle-card:hover {
+              transform: translateY(-5px) scale(1.02);
+              box-shadow: 0 12px 24px rgba(102, 126, 234, 0.3);
+            }
+            @keyframes float {
+              0%, 100% { transform: translateY(0px); }
+              50% { transform: translateY(-10px); }
+            }
+            .icon-float { animation: float 3s ease-in-out infinite; }
+          </style>
+      </head>
+      <body>
+          <div class="container mx-auto px-4 py-8">
+              <div class="card p-8 md:p-12 max-w-6xl mx-auto">
+                  <!-- ヘッダー -->
+                  <div class="text-center mb-8">
+                      <div class="text-6xl mb-4">👥✨</div>
+                      <h1 class="text-4xl font-extrabold mb-3">
+                          <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+                              ${team.name}
+                          </span>
+                      </h1>
+                      <p class="text-gray-600 text-lg">A Divine Team of ${members.results.length} Apostles</p>
+                  </div>
+                  
+                  <!-- チーム統計 -->
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                      <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-2xl text-center">
+                          <div class="text-3xl font-bold text-purple-600">${members.results.length}</div>
+                          <div class="text-gray-600 font-semibold">Total Members</div>
+                      </div>
+                      <div class="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-2xl text-center">
+                          <div class="text-3xl font-bold text-blue-600">${typeCounts.size}</div>
+                          <div class="text-gray-600 font-semibold">Unique Types</div>
+                      </div>
+                      <div class="bg-gradient-to-br from-green-50 to-teal-50 p-6 rounded-2xl text-center">
+                          <div class="text-3xl font-bold text-green-600">${diversityScore}%</div>
+                          <div class="text-gray-600 font-semibold">Diversity Score</div>
+                      </div>
+                  </div>
+                  
+                  <!-- チームメンバー -->
+                  <div class="mb-8">
+                      <h2 class="text-2xl font-bold text-center mb-6">
+                          <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+                              Team Members
+                          </span>
+                      </h2>
+                      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                          ${membersHTML}
+                      </div>
+                  </div>
+                  
+                  <!-- チームの強み -->
+                  <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-2xl mb-6">
+                      <h3 class="text-xl font-bold mb-4 text-center">
+                          <span class="text-2xl mr-2">💪</span>
+                          <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+                              Team Strengths
+                          </span>
+                      </h3>
+                      <div class="text-gray-700 leading-relaxed">
+                          <p class="mb-3">
+                              🌟 <strong>Diversity:</strong> This team has ${typeCounts.size} different personality types, bringing diverse perspectives and approaches.
+                          </p>
+                          <p class="mb-3">
+                              🤝 <strong>Balance:</strong> With ${members.results.length} members, this team has the perfect size for effective collaboration.
+                          </p>
+                          <p>
+                              ✨ <strong>Synergy:</strong> Each member's unique strengths complement the others, creating a powerful divine team!
+                          </p>
+                      </div>
+                  </div>
+                  
+                  <!-- アクション -->
+                  <div class="flex gap-4 justify-center">
+                      <a href="/" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-xl transition transform hover:scale-105">
+                          <i class="fas fa-home mr-2"></i>
+                          Back to Home
+                      </a>
+                      <button onclick="shareTeam()" class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-xl transition transform hover:scale-105">
+                          <i class="fas fa-share-alt mr-2"></i>
+                          Share Team
+                      </button>
+                  </div>
+              </div>
+          </div>
+          
+          <script>
+              function shareTeam() {
+                  const url = window.location.href;
+                  const text = 'Check out our divine team of the 12 Apostles! ✨👥';
+                  
+                  if (navigator.share) {
+                      navigator.share({ title: '${team.name}', text, url });
+                  } else {
+                      navigator.clipboard.writeText(url).then(() => {
+                          alert('✅ Team link copied to clipboard!');
+                      });
+                  }
+              }
+          </script>
+      </body>
+      </html>
+    `);
+  } catch (error) {
+    console.error('Team page error:', error);
+    return c.html('<h1>Error loading team</h1>', 500);
+  }
+});
+
 // メインページ
 app.get('/', (c) => {
   return c.html(`
@@ -182,6 +489,24 @@ app.get('/', (c) => {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>The 12 Apostles Palm Reading ✨ - Discover Your Type!</title>
+        
+        <!-- OGP Meta Tags for Social Sharing -->
+        <meta property="og:title" content="The 12 Apostles Palm Reading - Discover Your Divine Type!">
+        <meta property="og:description" content="Discover your divine personality type through palm reading! Find out which of the 12 Apostles you are ✨🤲">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://palm-reading-12apostles.pages.dev">
+        <meta property="og:image" content="https://palm-reading-12apostles.pages.dev/og-image.png">
+        <meta property="og:site_name" content="The 12 Apostles Palm Reading">
+        
+        <!-- Twitter Card Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="The 12 Apostles Palm Reading">
+        <meta name="twitter:description" content="Discover your divine personality type through palm reading! ✨🤲">
+        <meta name="twitter:image" content="https://palm-reading-12apostles.pages.dev/og-image.png">
+        
+        <!-- Description Meta Tag -->
+        <meta name="description" content="Discover which of the 12 Apostles you are through palm reading analysis. Find your divine personality type and connect with others!">
+        
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">

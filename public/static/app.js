@@ -271,11 +271,49 @@ function displayResult(data) {
             </div>
         </div>
         
-        <div class="bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-purple-500 p-5 rounded-xl">
-            <p class="text-gray-700 flex items-center">
-                <i class="fas fa-info-circle mr-3 text-purple-500 text-xl"></i>
-                <span class="font-semibold">You can form teams with others using this result! 🎉</span>
+        <!-- ソーシャル共有ボタン -->
+        <div class="bg-white p-6 rounded-2xl shadow-lg mb-4 border-2 border-purple-100">
+            <h4 class="text-xl font-bold mb-4 text-center">
+                <span class="text-2xl mr-2">📢</span>
+                <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+                    Share Your Result
+                </span>
+            </h4>
+            <div class="flex flex-wrap gap-3 justify-center">
+                <button onclick="shareToTwitter()" class="flex items-center gap-2 bg-[#1DA1F2] hover:bg-[#1a8cd8] text-white font-bold py-3 px-6 rounded-xl transition transform hover:scale-105">
+                    <i class="fab fa-twitter text-xl"></i>
+                    <span>Twitter</span>
+                </button>
+                <button onclick="shareToFacebook()" class="flex items-center gap-2 bg-[#4267B2] hover:bg-[#365899] text-white font-bold py-3 px-6 rounded-xl transition transform hover:scale-105">
+                    <i class="fab fa-facebook-f text-xl"></i>
+                    <span>Facebook</span>
+                </button>
+                <button onclick="shareToLine()" class="flex items-center gap-2 bg-[#06C755] hover:bg-[#05b04b] text-white font-bold py-3 px-6 rounded-xl transition transform hover:scale-105">
+                    <i class="fab fa-line text-xl"></i>
+                    <span>LINE</span>
+                </button>
+                <button onclick="copyToClipboard()" class="flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-xl transition transform hover:scale-105">
+                    <i class="fas fa-link text-xl"></i>
+                    <span>Copy Link</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- チーム形成セクション -->
+        <div class="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-300 p-6 rounded-2xl">
+            <h4 class="text-xl font-bold mb-3 text-center">
+                <span class="text-2xl mr-2">👥</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    Team Formation
+                </span>
+            </h4>
+            <p class="text-gray-700 text-center mb-4">
+                Find the perfect team with balanced personality types!
             </p>
+            <button onclick="autoMatchTeam()" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl transition transform hover:scale-105">
+                <i class="fas fa-users mr-2"></i>
+                Find My Team Now!
+            </button>
         </div>
     `;
     
@@ -326,4 +364,80 @@ function fileToBase64(file) {
         reader.onerror = reject;
         reader.readAsDataURL(file);
     });
+}
+
+// ソーシャル共有機能
+function shareToTwitter() {
+    if (!currentReading || !currentReading.apostleType) return;
+    
+    const apostleType = currentReading.apostleType;
+    const text = `I'm ${apostleType.name_en}! ${apostleType.icon}\n\nDiscover your divine personality type through palm reading! ✨🤲`;
+    const url = window.location.href;
+    const hashtags = '12Apostles,PalmReading,PersonalityTest';
+    
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&hashtags=${hashtags}`;
+    window.open(twitterUrl, '_blank', 'width=550,height=420');
+}
+
+function shareToFacebook() {
+    const url = window.location.href;
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+    window.open(facebookUrl, '_blank', 'width=550,height=420');
+}
+
+function shareToLine() {
+    if (!currentReading || !currentReading.apostleType) return;
+    
+    const apostleType = currentReading.apostleType;
+    const text = `I'm ${apostleType.name_en}! ${apostleType.icon}\n\nDiscover your divine personality type! ✨`;
+    const url = window.location.href;
+    
+    const lineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+    window.open(lineUrl, '_blank', 'width=550,height=420');
+}
+
+function copyToClipboard() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+        alert('✅ Link copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+        alert('❌ Failed to copy link');
+    });
+}
+
+// チーム自動形成機能
+async function autoMatchTeam() {
+    if (!currentUserId) {
+        alert('❌ User ID not found. Please try the palm reading again.');
+        return;
+    }
+    
+    const button = event.target;
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Matching...';
+    
+    try {
+        const response = await axios.post('/api/auto-match', {
+            userId: currentUserId
+        });
+        
+        const data = response.data;
+        
+        if (data.matched) {
+            alert(`🎉 Team matched successfully!\n\nTeam: ${data.teamName}\nMembers: ${data.memberCount}\nBalance Score: ${data.balanceScore}%\n\nRedirecting to team page...`);
+            
+            // チーム詳細ページへリダイレクト
+            window.location.href = `/team/${data.teamId}`;
+        } else {
+            alert(`⏳ ${data.message}\n\nYou'll be matched when more users join!`);
+            button.disabled = false;
+            button.innerHTML = '<i class="fas fa-users mr-2"></i>Find My Team Now!';
+        }
+    } catch (error) {
+        console.error('Team matching error:', error);
+        alert('❌ Failed to match team. Please try again later.');
+        button.disabled = false;
+        button.innerHTML = '<i class="fas fa-users mr-2"></i>Find My Team Now!';
+    }
 }
