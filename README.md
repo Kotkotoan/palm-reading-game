@@ -59,9 +59,9 @@
 
 ## 🔗 公開URL
 
-- **開発環境**: https://3000-icn33dzxs3u4bhodzvd6l-82b888ba.sandbox.novita.ai
-- **本番環境**: （デプロイ後に追加）
-- **GitHub**: https://github.com/Kotkotoan/palm-reading-game
+- **🌍 本番環境（公開中！）**: https://palm-reading-12apostles.pages.dev
+- **📦 GitHub**: https://github.com/Kotkotoan/palm-reading-game
+- **開発用URL**: https://5e156816.palm-reading-12apostles.pages.dev
 
 ## 📊 主要なAPIエンドポイント
 
@@ -179,8 +179,10 @@
 ## 🚀 デプロイ状況
 
 - **プラットフォーム**: Cloudflare Pages
-- **ステータス**: ✅ ローカル開発環境で動作中
-- **最終更新日**: 2025-10-24
+- **ステータス**: ✅ 本番環境で公開中！
+- **公開URL**: https://palm-reading-12apostles.pages.dev
+- **データベース**: Cloudflare D1（本番環境）
+- **最終デプロイ日**: 2025-11-02
 
 ## 📝 使い方
 
