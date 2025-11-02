@@ -1312,7 +1312,7 @@ app.get('/', (c) => {
                 <button id="langSwitch" onclick="switchLanguage()" 
                         class="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-2 px-6 rounded-full transition transform hover:scale-105 shadow-lg">
                     <i class="fas fa-globe mr-2"></i>
-                    <span class="lang-text">日本語</span>
+                    <span class="lang-text">English</span>
                 </button>
             </div>
             

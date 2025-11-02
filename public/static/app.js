@@ -1,7 +1,7 @@
 // グローバル変数
 let currentUserId = null;
 let currentReading = null;
-let currentLang = localStorage.getItem('lang') || 'en';
+let currentLang = localStorage.getItem('lang') || 'ja';
 
 // 翻訳データ
 const translations = {
@@ -91,6 +91,12 @@ function updateLanguage() {
     if (descEl) descEl.textContent = t('description');
     if (conceptTitleEl) conceptTitleEl.textContent = t('conceptTitle');
     if (conceptTextEl) conceptTextEl.textContent = t('conceptText');
+    
+    // 言語切り替えボタンのテキストを更新
+    const langTextEl = document.querySelector('.lang-text');
+    if (langTextEl) {
+        langTextEl.textContent = currentLang === 'ja' ? 'English' : '日本語';
+    }
     
     // フォームラベルを更新
     const labels = document.querySelectorAll('[data-translate]');
