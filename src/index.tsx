@@ -457,6 +457,34 @@ app.get('/team/:teamId', async (c) => {
               </div>
           </div>
           
+          <!-- Footer -->
+          <footer class="mt-16 pb-8">
+              <div class="container mx-auto px-4">
+                  <div class="card p-6 max-w-4xl mx-auto text-center">
+                      <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-4">
+                          <a href="/terms" class="text-gray-600 hover:text-purple-600 transition font-semibold">
+                              <i class="fas fa-file-contract mr-2"></i>Terms of Service
+                          </a>
+                          <span class="hidden md:inline text-gray-400">|</span>
+                          <a href="/contact" class="text-gray-600 hover:text-purple-600 transition font-semibold">
+                              <i class="fas fa-envelope mr-2"></i>Contact Us
+                          </a>
+                      </div>
+                      <div class="text-gray-600 text-sm">
+                          <p class="mb-2">Produced by</p>
+                          <a href="https://www.crossproducers.com" target="_blank" rel="noopener noreferrer" 
+                             class="text-purple-600 hover:text-purple-700 font-bold text-lg transition inline-flex items-center gap-2">
+                              <span>CROSS Business Producers Inc</span>
+                              <i class="fas fa-external-link-alt text-sm"></i>
+                          </a>
+                          <p class="mt-3 text-gray-500">
+                              © 2025 CROSS Business Producers Inc. All rights reserved.
+                          </p>
+                      </div>
+                  </div>
+              </div>
+          </footer>
+          
           <script>
               function shareTeam() {
                   const url = window.location.href;
@@ -478,6 +506,267 @@ app.get('/team/:teamId', async (c) => {
     console.error('Team page error:', error);
     return c.html('<h1>Error loading team</h1>', 500);
   }
+});
+
+// サービス約款ページ
+app.get('/terms', (c) => {
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Terms of Service - The 12 Apostles Palm Reading</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <style>
+          * { font-family: 'Poppins', sans-serif; }
+          body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+          }
+          .card {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+          }
+        </style>
+    </head>
+    <body>
+        <div class="container mx-auto px-4 py-8">
+            <div class="card p-8 md:p-12 max-w-4xl mx-auto">
+                <h1 class="text-4xl font-extrabold text-center mb-8">
+                    <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+                        Terms of Service
+                    </span>
+                </h1>
+                
+                <div class="prose prose-lg max-w-none text-gray-700">
+                    <p class="text-sm text-gray-500 mb-6">Last Updated: November 2, 2025</p>
+                    
+                    <section class="mb-8">
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">1. Acceptance of Terms</h2>
+                        <p class="mb-4">
+                            By accessing and using The 12 Apostles Palm Reading service ("Service"), you accept and agree to be bound by the terms and provision of this agreement.
+                        </p>
+                    </section>
+                    
+                    <section class="mb-8">
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">2. Service Description</h2>
+                        <p class="mb-4">
+                            The 12 Apostles Palm Reading is an entertainment service that analyzes palm images and provides personality type assessments based on the 12 Apostles archetypes. This service is for entertainment purposes only and should not be considered as professional advice.
+                        </p>
+                    </section>
+                    
+                    <section class="mb-8">
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">3. User Data and Privacy</h2>
+                        <ul class="list-disc pl-6 mb-4 space-y-2">
+                            <li>We collect palm images and user names to provide the service</li>
+                            <li>Your data is stored securely using Cloudflare D1 database</li>
+                            <li>We do not share your personal information with third parties</li>
+                            <li>You can request deletion of your data by contacting us</li>
+                        </ul>
+                    </section>
+                    
+                    <section class="mb-8">
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">4. User Conduct</h2>
+                        <p class="mb-4">You agree not to:</p>
+                        <ul class="list-disc pl-6 mb-4 space-y-2">
+                            <li>Upload inappropriate or offensive content</li>
+                            <li>Attempt to hack or disrupt the service</li>
+                            <li>Use the service for any illegal purposes</li>
+                            <li>Impersonate others or provide false information</li>
+                        </ul>
+                    </section>
+                    
+                    <section class="mb-8">
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">5. Intellectual Property</h2>
+                        <p class="mb-4">
+                            All content, features, and functionality of the Service are owned by CROSS Business Producers Inc and are protected by international copyright, trademark, and other intellectual property laws.
+                        </p>
+                    </section>
+                    
+                    <section class="mb-8">
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">6. Disclaimer of Warranties</h2>
+                        <p class="mb-4">
+                            The Service is provided "as is" without warranties of any kind. We do not guarantee that the service will be uninterrupted, secure, or error-free. The personality analysis is for entertainment purposes only.
+                        </p>
+                    </section>
+                    
+                    <section class="mb-8">
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">7. Limitation of Liability</h2>
+                        <p class="mb-4">
+                            CROSS Business Producers Inc shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of the Service.
+                        </p>
+                    </section>
+                    
+                    <section class="mb-8">
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">8. Changes to Terms</h2>
+                        <p class="mb-4">
+                            We reserve the right to modify these terms at any time. Changes will be effective immediately upon posting to the Service.
+                        </p>
+                    </section>
+                    
+                    <section class="mb-8">
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">9. Contact Information</h2>
+                        <p class="mb-4">
+                            For questions about these Terms of Service, please contact us through our <a href="/contact" class="text-purple-600 hover:text-purple-700 font-semibold">Contact Page</a>.
+                        </p>
+                    </section>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <a href="/" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-xl transition transform hover:scale-105 inline-block">
+                        <i class="fas fa-home mr-2"></i>
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <footer class="mt-8 pb-8">
+                <div class="container mx-auto px-4">
+                    <div class="card p-6 max-w-4xl mx-auto text-center">
+                        <div class="text-gray-600 text-sm">
+                            <p class="mb-2">Produced by</p>
+                            <a href="https://www.crossproducers.com" target="_blank" rel="noopener noreferrer" 
+                               class="text-purple-600 hover:text-purple-700 font-bold text-lg transition inline-flex items-center gap-2">
+                                <span>CROSS Business Producers Inc</span>
+                                <i class="fas fa-external-link-alt text-sm"></i>
+                            </a>
+                            <p class="mt-3 text-gray-500">
+                                © 2025 CROSS Business Producers Inc. All rights reserved.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </body>
+    </html>
+  `)
+});
+
+// お問い合わせページ
+app.get('/contact', (c) => {
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Contact Us - The 12 Apostles Palm Reading</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <style>
+          * { font-family: 'Poppins', sans-serif; }
+          body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+          }
+          .card {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+          }
+        </style>
+    </head>
+    <body>
+        <div class="container mx-auto px-4 py-8">
+            <div class="card p-8 md:p-12 max-w-3xl mx-auto">
+                <div class="text-center mb-8">
+                    <div class="text-6xl mb-4">📧</div>
+                    <h1 class="text-4xl font-extrabold mb-4">
+                        <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+                            Contact Us
+                        </span>
+                    </h1>
+                    <p class="text-gray-600 text-lg">
+                        We'd love to hear from you!
+                    </p>
+                </div>
+                
+                <div class="space-y-6 mb-8">
+                    <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-2xl">
+                        <h2 class="text-xl font-bold text-purple-700 mb-4 flex items-center">
+                            <i class="fas fa-building mr-3 text-2xl"></i>
+                            Company Information
+                        </h2>
+                        <div class="text-gray-700 space-y-2">
+                            <p><strong>Company Name:</strong> CROSS Business Producers Inc</p>
+                            <p><strong>Website:</strong> 
+                                <a href="https://www.crossproducers.com" target="_blank" rel="noopener noreferrer" 
+                                   class="text-purple-600 hover:text-purple-700 font-semibold">
+                                    www.crossproducers.com
+                                    <i class="fas fa-external-link-alt text-sm ml-1"></i>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-2xl">
+                        <h2 class="text-xl font-bold text-blue-700 mb-4 flex items-center">
+                            <i class="fas fa-envelope mr-3 text-2xl"></i>
+                            Get in Touch
+                        </h2>
+                        <p class="text-gray-700 mb-4">
+                            For inquiries about The 12 Apostles Palm Reading service, please visit our company website or reach out through the contact form available there.
+                        </p>
+                        <a href="https://www.crossproducers.com" target="_blank" rel="noopener noreferrer"
+                           class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-xl transition transform hover:scale-105 inline-flex items-center gap-2">
+                            <span>Visit Company Website</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-green-50 to-teal-50 p-6 rounded-2xl">
+                        <h2 class="text-xl font-bold text-green-700 mb-4 flex items-center">
+                            <i class="fas fa-question-circle mr-3 text-2xl"></i>
+                            Common Inquiries
+                        </h2>
+                        <ul class="text-gray-700 space-y-2">
+                            <li><i class="fas fa-check text-green-600 mr-2"></i>Service questions and technical support</li>
+                            <li><i class="fas fa-check text-green-600 mr-2"></i>Privacy and data deletion requests</li>
+                            <li><i class="fas fa-check text-green-600 mr-2"></i>Partnership and business inquiries</li>
+                            <li><i class="fas fa-check text-green-600 mr-2"></i>Feedback and suggestions</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <a href="/" class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-bold py-3 px-8 rounded-xl transition transform hover:scale-105 inline-block">
+                        <i class="fas fa-home mr-2"></i>
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <footer class="mt-8 pb-8">
+                <div class="container mx-auto px-4">
+                    <div class="card p-6 max-w-3xl mx-auto text-center">
+                        <div class="text-gray-600 text-sm">
+                            <p class="mb-2">Produced by</p>
+                            <a href="https://www.crossproducers.com" target="_blank" rel="noopener noreferrer" 
+                               class="text-purple-600 hover:text-purple-700 font-bold text-lg transition inline-flex items-center gap-2">
+                                <span>CROSS Business Producers Inc</span>
+                                <i class="fas fa-external-link-alt text-sm"></i>
+                            </a>
+                            <p class="mt-3 text-gray-500">
+                                © 2025 CROSS Business Producers Inc. All rights reserved.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </body>
+    </html>
+  `)
 });
 
 // メインページ
@@ -771,6 +1060,34 @@ app.get('/', (c) => {
                 </div>
             </div>
         </div>
+
+        <!-- Footer -->
+        <footer class="mt-16 pb-8">
+            <div class="container mx-auto px-4">
+                <div class="card p-6 max-w-4xl mx-auto text-center">
+                    <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-4">
+                        <a href="/terms" class="text-gray-600 hover:text-purple-600 transition font-semibold">
+                            <i class="fas fa-file-contract mr-2"></i>Terms of Service
+                        </a>
+                        <span class="hidden md:inline text-gray-400">|</span>
+                        <a href="/contact" class="text-gray-600 hover:text-purple-600 transition font-semibold">
+                            <i class="fas fa-envelope mr-2"></i>Contact Us
+                        </a>
+                    </div>
+                    <div class="text-gray-600 text-sm">
+                        <p class="mb-2">Produced by</p>
+                        <a href="https://www.crossproducers.com" target="_blank" rel="noopener noreferrer" 
+                           class="text-purple-600 hover:text-purple-700 font-bold text-lg transition inline-flex items-center gap-2">
+                            <span>CROSS Business Producers Inc</span>
+                            <i class="fas fa-external-link-alt text-sm"></i>
+                        </a>
+                        <p class="mt-3 text-gray-500">
+                            © 2025 CROSS Business Producers Inc. All rights reserved.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
 
         <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
         <script src="/static/app.js"></script>
