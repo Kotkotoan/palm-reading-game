@@ -250,39 +250,39 @@ function displayResult(data) {
     const t = translations[currentLang];
     
     const resultHTML = `
-        <div class="bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50 p-8 md:p-10 rounded-3xl mb-6 border-2 border-purple-200">
-            <div class="text-7xl text-center mb-6 icon-float">${apostleType.icon}</div>
-            <h3 class="text-4xl font-extrabold text-center mb-3">
+        <div class="bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50 p-4 md:p-8 rounded-3xl mb-6 border-2 border-purple-200">
+            <div class="text-6xl md:text-7xl text-center mb-4 md:mb-6 icon-float">${apostleType.icon}</div>
+            <h3 class="text-2xl md:text-4xl font-extrabold text-center mb-2 md:mb-3 px-2">
                 <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
                     ${nameParts[0]}
                 </span>
             </h3>
-            <p class="text-xl text-center mb-2 font-semibold text-gray-600">
+            <p class="text-lg md:text-xl text-center mb-2 font-semibold text-gray-600 px-2">
                 ${nameParts[1] || nameParts[0]}
             </p>
-            <p class="text-lg text-gray-600 mb-6 text-center leading-relaxed">${description}</p>
+            <p class="text-base md:text-lg text-gray-600 mb-4 md:mb-6 text-center leading-relaxed px-4 max-w-2xl mx-auto">${description}</p>
             
             <!-- 詳細な性格分析 -->
-            <div class="bg-white p-6 rounded-2xl shadow-lg mb-4 border-2 border-purple-100">
-                <h4 class="text-2xl font-bold mb-4 flex items-center justify-center">
-                    <span class="text-3xl mr-2">🌟</span>
+            <div class="bg-white p-4 md:p-6 rounded-2xl shadow-lg mb-4 border-2 border-purple-100">
+                <h4 class="text-xl md:text-2xl font-bold mb-3 md:mb-4 flex items-center justify-center flex-wrap text-center">
+                    <span class="text-2xl md:text-3xl mr-2">🌟</span>
                     <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
                         ${currentLang === 'ja' ? '詳細な性格分析' : 'Detailed Personality Analysis'}
                     </span>
                 </h4>
-                <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-5 rounded-xl mb-4">
-                    <p class="text-gray-700 leading-relaxed text-base">
+                <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-4 md:p-5 rounded-xl mb-3 md:mb-4">
+                    <p class="text-gray-700 leading-relaxed text-sm md:text-base">
                         ${detailedPersonality}
                     </p>
                 </div>
-                <div class="space-y-3 text-gray-700">
-                    <p class="flex items-start bg-purple-50 p-3 rounded-xl">
-                        <span class="text-purple-600 mr-2 mt-1">💫</span>
-                        <span><strong>${currentLang === 'ja' ? '主な特性' : 'Key Traits'}:</strong> ${characteristics}</span>
+                <div class="space-y-2 md:space-y-3 text-gray-700">
+                    <p class="flex items-start bg-purple-50 p-3 rounded-xl text-sm md:text-base">
+                        <span class="text-purple-600 mr-2 mt-1 flex-shrink-0">💫</span>
+                        <span class="break-words"><strong>${currentLang === 'ja' ? '主な特性' : 'Key Traits'}:</strong> ${characteristics}</span>
                     </p>
-                    <p class="flex items-start bg-pink-50 p-3 rounded-xl">
-                        <span class="text-pink-600 mr-2 mt-1">💪</span>
-                        <span><strong>${currentLang === 'ja' ? 'コアな強み' : 'Core Strengths'}:</strong> ${strengths}</span>
+                    <p class="flex items-start bg-pink-50 p-3 rounded-xl text-sm md:text-base">
+                        <span class="text-pink-600 mr-2 mt-1 flex-shrink-0">💪</span>
+                        <span class="break-words"><strong>${currentLang === 'ja' ? 'コアな強み' : 'Core Strengths'}:</strong> ${strengths}</span>
                     </p>
                 </div>
                 <div class="mt-4 pt-4 border-t border-gray-200 text-center">
@@ -412,19 +412,39 @@ function displayResult(data) {
         </div>
         
         <!-- チーム形成セクション -->
-        <div class="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-300 p-6 rounded-2xl">
+        <div class="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-300 p-4 md:p-6 rounded-2xl">
             <h4 class="text-xl font-bold mb-3 text-center">
                 <span class="text-2xl mr-2">👥</span>
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                     ${currentLang === 'ja' ? 'チーム形成' : 'Team Formation'}
                 </span>
             </h4>
-            <p class="text-gray-700 text-center mb-4">
-                ${currentLang === 'ja' ? 'バランスの取れたチームを見つけよう！' : 'Find the perfect team with balanced personality types!'}
+            <p class="text-gray-700 text-center mb-4 text-sm md:text-base px-2">
+                ${currentLang === 'ja' ? 'チームコードで参加するか、新しいチームを作成しよう！' : 'Join with team code or create a new team!'}
             </p>
-            <button onclick="autoMatchTeam()" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl transition transform hover:scale-105">
-                <i class="fas fa-users mr-2"></i>
-                ${currentLang === 'ja' ? '今すぐチームを見つける！' : 'Find My Team Now!'}
+            
+            <!-- チームコード入力 -->
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2 font-semibold text-sm md:text-base">
+                    <i class="fas fa-key mr-2"></i>${currentLang === 'ja' ? 'チームコードを入力' : 'Enter Team Code'}
+                </label>
+                <div class="flex gap-2">
+                    <input type="text" id="teamCodeInput" placeholder="${currentLang === 'ja' ? 'チームコード (例: TEAM-123)' : 'Team Code (e.g., TEAM-123)'}" 
+                           class="flex-1 px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-purple-500 focus:outline-none text-sm md:text-base">
+                    <button onclick="joinTeamByCode()" class="bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white font-bold px-4 md:px-6 py-3 rounded-xl transition transform hover:scale-105 text-sm md:text-base whitespace-nowrap">
+                        ${currentLang === 'ja' ? '参加' : 'Join'}
+                    </button>
+                </div>
+            </div>
+            
+            <div class="text-center text-gray-500 my-3 text-sm">
+                ${currentLang === 'ja' ? 'または' : 'or'}
+            </div>
+            
+            <!-- 新しいチーム作成 -->
+            <button onclick="createNewTeam()" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 md:py-4 px-6 rounded-xl transition transform hover:scale-105 text-sm md:text-base">
+                <i class="fas fa-plus-circle mr-2"></i>
+                ${currentLang === 'ja' ? '新しいチームを作成' : 'Create New Team'}
             </button>
         </div>
     `;
@@ -551,5 +571,69 @@ async function autoMatchTeam() {
         alert('❌ Failed to match team. Please try again later.');
         button.disabled = false;
         button.innerHTML = '<i class="fas fa-users mr-2"></i>Find My Team Now!';
+    }
+}
+
+// 新しいチーム作成
+async function createNewTeam() {
+    if (!currentUserId) {
+        alert(currentLang === 'ja' ? '❌ ユーザーIDが見つかりません。もう一度診断してください。' : '❌ User ID not found. Please try the palm reading again.');
+        return;
+    }
+    
+    const teamName = prompt(currentLang === 'ja' ? 'チーム名を入力してください:' : 'Enter team name:');
+    if (!teamName) return;
+    
+    try {
+        const response = await axios.post('/api/create-team', {
+            teamName: teamName,
+            userIds: [currentUserId]
+        });
+        
+        const { teamId, teamCode } = response.data;
+        
+        alert(currentLang === 'ja' 
+            ? `🎉 チームが作成されました！\n\nチーム名: ${teamName}\nチームコード: ${teamCode}\n\nこのコードを共有して、メンバーを招待しましょう！`
+            : `🎉 Team created successfully!\n\nTeam Name: ${teamName}\nTeam Code: ${teamCode}\n\nShare this code to invite members!`
+        );
+        
+        window.location.href = `/team/${teamId}`;
+    } catch (error) {
+        console.error('Team creation error:', error);
+        alert(currentLang === 'ja' ? '❌ チーム作成に失敗しました。' : '❌ Failed to create team.');
+    }
+}
+
+// チームコードで参加
+async function joinTeamByCode() {
+    if (!currentUserId) {
+        alert(currentLang === 'ja' ? '❌ ユーザーIDが見つかりません。もう一度診断してください。' : '❌ User ID not found. Please try the palm reading again.');
+        return;
+    }
+    
+    const teamCode = document.getElementById('teamCodeInput').value.trim();
+    if (!teamCode) {
+        alert(currentLang === 'ja' ? 'チームコードを入力してください。' : 'Please enter a team code.');
+        return;
+    }
+    
+    try {
+        const response = await axios.post('/api/join-team', {
+            teamCode: teamCode,
+            userId: currentUserId
+        });
+        
+        const { teamId, teamName } = response.data;
+        
+        alert(currentLang === 'ja'
+            ? `🎉 チームに参加しました！\n\nチーム名: ${teamName}`
+            : `🎉 Successfully joined the team!\n\nTeam Name: ${teamName}`
+        );
+        
+        window.location.href = `/team/${teamId}`;
+    } catch (error) {
+        console.error('Join team error:', error);
+        const errorMsg = error.response?.data?.error || (currentLang === 'ja' ? 'チームへの参加に失敗しました。' : 'Failed to join team.');
+        alert(`❌ ${errorMsg}`);
     }
 }

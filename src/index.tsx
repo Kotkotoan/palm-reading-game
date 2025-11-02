@@ -102,10 +102,13 @@ app.post('/api/create-team', async (c) => {
     const body = await c.req.json();
     const { teamName, userIds } = body;
     
+    // チームコード生成（ランダム6桁）
+    const teamCode = 'TEAM-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    
     // チーム作成
     const teamResult = await DB.prepare(
-      'INSERT INTO teams (name) VALUES (?) RETURNING id'
-    ).bind(teamName).first();
+      'INSERT INTO teams (name, team_code) VALUES (?, ?) RETURNING id'
+    ).bind(teamName, teamCode).first();
     
     const teamId = teamResult?.id as number;
     
@@ -122,7 +125,7 @@ app.post('/api/create-team', async (c) => {
       }
     }
     
-    return c.json({ teamId, message: 'Team created successfully' });
+    return c.json({ teamId, teamCode, message: 'Team created successfully' });
   } catch (error) {
     return c.json({ error: String(error) }, 500);
   }
@@ -271,6 +274,59 @@ app.post('/api/auto-match', async (c) => {
   }
 });
 
+// チームコードで参加
+app.post('/api/join-team', async (c) => {
+  const { DB } = c.env;
+  
+  try {
+    const body = await c.req.json();
+    const { teamCode, userId } = body;
+    
+    // チームコードでチームを検索
+    const team = await DB.prepare(
+      'SELECT id, name FROM teams WHERE team_code = ?'
+    ).bind(teamCode).first();
+    
+    if (!team) {
+      return c.json({ error: 'Team not found with this code' }, 404);
+    }
+    
+    const teamId = team.id as number;
+    
+    // ユーザーの使徒タイプを取得
+    const reading = await DB.prepare(
+      'SELECT apostle_type_id FROM palm_readings WHERE user_id = ? ORDER BY created_at DESC LIMIT 1'
+    ).bind(userId).first();
+    
+    if (!reading) {
+      return c.json({ error: 'User reading not found' }, 404);
+    }
+    
+    // 既にチームメンバーかチェック
+    const existingMember = await DB.prepare(
+      'SELECT id FROM team_members WHERE team_id = ? AND user_id = ?'
+    ).bind(teamId, userId).first();
+    
+    if (existingMember) {
+      return c.json({ error: 'Already a member of this team' }, 400);
+    }
+    
+    // チームに参加
+    await DB.prepare(
+      'INSERT INTO team_members (team_id, user_id, apostle_type_id) VALUES (?, ?, ?)'
+    ).bind(teamId, userId, reading.apostle_type_id).run();
+    
+    return c.json({ 
+      teamId, 
+      teamName: team.name,
+      message: 'Successfully joined team' 
+    });
+  } catch (error) {
+    console.error('Join team error:', error);
+    return c.json({ error: String(error) }, 500);
+  }
+});
+
 // 簡易的な手相分析ロジック（実際にはAI画像分析を使用）
 async function analyzePalmImage(imageData: string) {
   // Base64画像データから特徴を抽出（簡易版）
@@ -392,6 +448,13 @@ app.get('/team/:teamId', async (c) => {
                           </span>
                       </h1>
                       <p class="text-gray-600 text-lg">A Divine Team of ${members.results.length} Apostles</p>
+                      ${team.team_code ? `
+                      <div class="mt-4 inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl font-bold text-lg shadow-lg">
+                          <i class="fas fa-key mr-2"></i>
+                          Team Code: ${team.team_code}
+                      </div>
+                      <p class="text-sm text-gray-500 mt-2">Share this code to invite more members!</p>
+                      ` : ''}
                   </div>
                   
                   <!-- チーム統計 -->
@@ -421,6 +484,32 @@ app.get('/team/:teamId', async (c) => {
                           ${membersHTML}
                       </div>
                   </div>
+                  
+                  ${typeCounts.size < 12 ? `
+                  <!-- 不足タイプのアドバイス -->
+                  <div class="bg-gradient-to-br from-yellow-50 to-orange-50 p-6 rounded-2xl mb-6 border-2 border-orange-200">
+                      <h3 class="text-xl font-bold mb-4 text-center">
+                          <span class="text-2xl mr-2">💡</span>
+                          <span class="bg-gradient-to-r from-orange-600 to-red-500 bg-clip-text text-transparent">
+                              Team Growth Opportunities
+                          </span>
+                      </h3>
+                      <div class="text-gray-700 leading-relaxed">
+                          <p class="mb-3">
+                              📊 <strong>Current Diversity:</strong> Your team has ${typeCounts.size} out of 12 personality types (${diversityScore}% coverage).
+                          </p>
+                          <p class="mb-3">
+                              🎯 <strong>Missing Types:</strong> ${12 - typeCounts.size} personality types are not yet represented in your team.
+                          </p>
+                          <p class="mb-3">
+                              ✨ <strong>Recommendation:</strong> Invite members with different personality types to increase team diversity and unlock new perspectives!
+                          </p>
+                          <p class="text-sm text-gray-600 italic">
+                              💬 A more diverse team brings better problem-solving capabilities and balanced decision-making.
+                          </p>
+                      </div>
+                  </div>
+                  ` : ''}
                   
                   <!-- チームの強み -->
                   <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-2xl mb-6">
