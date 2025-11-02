@@ -1,15 +1,108 @@
 // グローバル変数
 let currentUserId = null;
 let currentReading = null;
+let currentLang = localStorage.getItem('lang') || 'en';
+
+// 翻訳データ
+const translations = {
+    en: {
+        title: 'The ForeSight Code',
+        subtitle: 'The Algorithm of Purpose',
+        description: 'The algorithm that moves your mission.',
+        conceptTitle: 'What drives CROSS Graph is not technology.',
+        conceptText: 'It is the code of purpose engraved within you. We decode that code and design the future.',
+        yourName: 'Your Name',
+        enterName: 'Enter your name',
+        palmPhoto: 'Palm Photo',
+        captureStep: 'Capture Your Palm',
+        discoverBtn: 'Discover My Code',
+        analyzing: 'Analyzing your palm...',
+        magicProgress: '✨ Decoding in progress ✨',
+        stepResult: 'Your Divine Code',
+        tryAgain: 'Try Again',
+        shareResult: 'Share Your Result',
+        teamFormation: 'Team Formation',
+        teamDesc: 'Find the perfect team with balanced codes!',
+        findTeam: 'Find My Team Now!',
+        meetTitle: 'Meet The 12 Codes',
+        meetDesc: 'Discover all purpose archetypes 🌟',
+        switchLang: '日本語'
+    },
+    ja: {
+        title: 'The ForeSight Code',
+        subtitle: '使命のアルゴリズム',
+        description: 'あなたの使命を動かすアルゴリズム。',
+        conceptTitle: 'CROSS Graphを動かすのは、テクノロジーではない。',
+        conceptText: 'それは、あなたの中に刻まれた使命のコードだ。私たちは、そのコードを解読し、未来を設計する。',
+        yourName: 'お名前',
+        enterName: 'お名前を入力',
+        palmPhoto: '手のひら写真',
+        captureStep: '手のひらを撮影',
+        discoverBtn: 'コードを解読する',
+        analyzing: '手相を分析中...',
+        magicProgress: '✨ 解読中 ✨',
+        stepResult: 'あなたの神聖なコード',
+        tryAgain: 'もう一度診断する',
+        shareResult: '診断結果をシェア',
+        teamFormation: 'チーム形成',
+        teamDesc: 'バランスの取れたコードでチームを見つけよう！',
+        findTeam: '今すぐチームを見つける！',
+        meetTitle: '12のコードを知る',
+        meetDesc: '全ての使命のアーキタイプを見る 🌟',
+        switchLang: 'English'
+    }
+};
+
+// 言語切り替え
+function switchLanguage() {
+    currentLang = currentLang === 'en' ? 'ja' : 'en';
+    localStorage.setItem('lang', currentLang);
+    location.reload();
+}
+
+// 翻訳取得
+function t(key) {
+    return translations[currentLang][key] || translations.en[key] || key;
+}
 
 // ページ読み込み時の初期化
 document.addEventListener('DOMContentLoaded', async () => {
+    // 言語に応じてテキストを更新
+    updateLanguage();
+    
     // 使徒タイプ一覧の読み込み
     await loadApostleTypes();
     
     // イベントリスナーの設定
     setupEventListeners();
 });
+
+// 言語更新
+function updateLanguage() {
+    // タイトルと説明を更新
+    const titleEl = document.querySelector('.hero-title-main');
+    const subtitleEl = document.querySelector('.hero-subtitle');
+    const descEl = document.querySelector('.hero-description');
+    const conceptTitleEl = document.querySelector('.concept-title');
+    const conceptTextEl = document.querySelector('.concept-text');
+    
+    if (titleEl) titleEl.textContent = t('title');
+    if (subtitleEl) subtitleEl.textContent = t('subtitle');
+    if (descEl) descEl.textContent = t('description');
+    if (conceptTitleEl) conceptTitleEl.textContent = t('conceptTitle');
+    if (conceptTextEl) conceptTextEl.textContent = t('conceptText');
+    
+    // フォームラベルを更新
+    const labels = document.querySelectorAll('[data-translate]');
+    labels.forEach(el => {
+        const key = el.getAttribute('data-translate');
+        if (key) el.textContent = t(key);
+    });
+    
+    // ボタンテキストを更新
+    const langBtn = document.getElementById('langSwitch');
+    if (langBtn) langBtn.textContent = t('switchLang');
+}
 
 // 使徒タイプ一覧の読み込み
 async function loadApostleTypes() {

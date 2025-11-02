@@ -777,24 +777,24 @@ app.get('/', (c) => {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>The 12 Apostles Palm Reading ✨ - Discover Your Type!</title>
+        <title>The ForeSight Code - The Algorithm of Purpose</title>
         
         <!-- OGP Meta Tags for Social Sharing -->
-        <meta property="og:title" content="The 12 Apostles Palm Reading - Discover Your Divine Type!">
-        <meta property="og:description" content="Discover your divine personality type through palm reading! Find out which of the 12 Apostles you are ✨🤲">
+        <meta property="og:title" content="The ForeSight Code - The Algorithm of Purpose">
+        <meta property="og:description" content="The algorithm that moves your mission. Decode the code of purpose engraved within you. 🔮✨">
         <meta property="og:type" content="website">
         <meta property="og:url" content="https://palm-reading-12apostles.pages.dev">
         <meta property="og:image" content="https://palm-reading-12apostles.pages.dev/og-image.png">
-        <meta property="og:site_name" content="The 12 Apostles Palm Reading">
+        <meta property="og:site_name" content="The ForeSight Code">
         
         <!-- Twitter Card Meta Tags -->
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="The 12 Apostles Palm Reading">
-        <meta name="twitter:description" content="Discover your divine personality type through palm reading! ✨🤲">
+        <meta name="twitter:title" content="The ForeSight Code">
+        <meta name="twitter:description" content="The algorithm that moves your mission. 🔮✨">
         <meta name="twitter:image" content="https://palm-reading-12apostles.pages.dev/og-image.png">
         
         <!-- Description Meta Tag -->
-        <meta name="description" content="Discover which of the 12 Apostles you are through palm reading analysis. Find your divine personality type and connect with others!">
+        <meta name="description" content="The ForeSight Code - Decode the code of purpose engraved within you and design the future. Powered by CROSS Graph.">
         
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
@@ -804,7 +804,7 @@ app.get('/', (c) => {
             font-family: 'Poppins', sans-serif;
           }
           body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 50%, #16213e 100%);
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
@@ -856,12 +856,12 @@ app.get('/', (c) => {
           }
           
           .hero-title {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: linear-gradient(135deg, #d4af37 0%, #ffd700 50%, #ffed4e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: fadeInUp 1s ease-out;
-            text-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+            text-shadow: 0 4px 20px rgba(212, 175, 55, 0.5);
           }
           
           .subtitle {
@@ -965,22 +965,38 @@ app.get('/', (c) => {
     </head>
     <body>
         <div class="container mx-auto px-4 py-8">
+            <!-- 言語切り替えボタン -->
+            <div class="fixed top-4 right-4 z-50">
+                <button id="langSwitch" onclick="switchLanguage()" 
+                        class="bg-gradient-to-r from-yellow-600 to-yellow-500 hover:from-yellow-700 hover:to-yellow-600 text-black font-bold py-2 px-6 rounded-full transition transform hover:scale-105 shadow-lg">
+                    <i class="fas fa-globe mr-2"></i>
+                    <span class="lang-text">日本語</span>
+                </button>
+            </div>
+            
             <!-- ヒーローセクション -->
             <div class="card p-8 md:p-12 max-w-4xl mx-auto mb-8">
                 <div class="text-center mb-8">
-                    <div class="icon-float text-7xl mb-6">✨🤲✨</div>
-                    <h1 class="hero-title text-5xl md:text-6xl font-extrabold mb-4">
-                        The 12 Apostles
+                    <div class="icon-float text-7xl mb-6">🔮✨🤲</div>
+                    <h1 class="hero-title hero-title-main text-5xl md:text-6xl font-extrabold mb-4">
+                        The ForeSight Code
                     </h1>
-                    <h2 class="hero-title text-3xl md:text-4xl font-bold mb-6">
-                        Palm Reading
+                    <h2 class="hero-title hero-subtitle text-3xl md:text-4xl font-bold mb-6">
+                        The Algorithm of Purpose
                     </h2>
-                    <p class="subtitle text-xl text-gray-600 mb-4 leading-relaxed">
-                        Discover Your Divine Personality Type 🌟
+                    <p class="subtitle hero-description text-xl text-gray-300 mb-4 leading-relaxed font-semibold">
+                        The algorithm that moves your mission.
                     </p>
-                    <p class="text-gray-500 text-sm">
-                        Upload your palm photo and find out which of the 12 Apostles you are!
-                    </p>
+                    
+                    <!-- コンセプトテキスト -->
+                    <div class="mt-8 bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-2xl border-2 border-yellow-600">
+                        <p class="concept-title text-lg text-yellow-500 mb-3 font-bold italic">
+                            What drives CROSS Graph is not technology.
+                        </p>
+                        <p class="concept-text text-gray-300 leading-relaxed">
+                            It is the code of purpose engraved within you. We decode that code and design the future.
+                        </p>
+                    </div>
                 </div>
 
                 <!-- ステップ1: 写真アップロード -->
