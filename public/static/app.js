@@ -447,6 +447,37 @@ function displayResult(data) {
                 ${currentLang === 'ja' ? '新しいチームを作成' : 'Create New Team'}
             </button>
         </div>
+        
+        <!-- 詳細分析お問い合わせセクション -->
+        <div class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border-2 border-indigo-300 p-4 md:p-6 rounded-2xl mt-4">
+            <h4 class="text-xl font-bold mb-3 text-center">
+                <span class="text-2xl mr-2">🔮</span>
+                <span class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                    ${currentLang === 'ja' ? 'さらに詳しい分析をご希望の方へ' : 'Want Deeper Analysis?'}
+                </span>
+            </h4>
+            <p class="text-gray-700 text-center mb-4 text-sm md:text-base px-2 leading-relaxed">
+                ${currentLang === 'ja' 
+                    ? 'より詳細なパーソナリティ分析や、具体的な未来予測、キャリアアドバイスをご希望の方は、専門チームにご相談ください。' 
+                    : 'For detailed personality analysis, specific future predictions, and career advice, consult with our expert team.'}
+            </p>
+            <div class="flex flex-col md:flex-row gap-3 justify-center">
+                <a href="/contact" class="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 md:py-4 px-6 rounded-xl transition transform hover:scale-105 text-center text-sm md:text-base shadow-lg">
+                    <i class="fas fa-envelope mr-2"></i>
+                    ${currentLang === 'ja' ? 'お問い合わせ' : 'Contact Us'}
+                </a>
+                <a href="https://www.crossproducers.com" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 md:py-4 px-6 rounded-xl transition transform hover:scale-105 text-center text-sm md:text-base shadow-lg">
+                    <i class="fas fa-external-link-alt mr-2"></i>
+                    ${currentLang === 'ja' ? '公式サイトへ' : 'Visit Website'}
+                </a>
+            </div>
+            <p class="text-xs text-gray-500 text-center mt-4">
+                <i class="fas fa-info-circle mr-1"></i>
+                ${currentLang === 'ja' 
+                    ? '専門的なコンサルティングサービスをご提供しています' 
+                    : 'Professional consulting services available'}
+            </p>
+        </div>
     `;
     
     document.getElementById('result').innerHTML = resultHTML;

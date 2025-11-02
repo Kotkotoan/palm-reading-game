@@ -812,6 +812,33 @@ app.get('/contact', (c) => {
                         </a>
                     </div>
                     
+                    <div class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6 rounded-2xl border-2 border-indigo-300">
+                        <h2 class="text-xl font-bold text-indigo-700 mb-4 flex items-center">
+                            <i class="fas fa-star mr-3 text-2xl"></i>
+                            Professional Consultation Services
+                        </h2>
+                        <p class="text-gray-700 mb-4 leading-relaxed">
+                            Interested in deeper personality analysis, specific future predictions, or personalized career guidance? Our expert team offers professional consultation services tailored to your needs.
+                        </p>
+                        <div class="bg-white p-4 rounded-xl mb-4">
+                            <h3 class="font-bold text-purple-700 mb-2 flex items-center">
+                                <i class="fas fa-sparkles mr-2"></i>
+                                What We Offer:
+                            </h3>
+                            <ul class="text-gray-700 space-y-2 text-sm">
+                                <li><i class="fas fa-chevron-right text-purple-500 mr-2"></i>In-depth personality analysis</li>
+                                <li><i class="fas fa-chevron-right text-purple-500 mr-2"></i>Detailed future path predictions (2026-2050)</li>
+                                <li><i class="fas fa-chevron-right text-purple-500 mr-2"></i>Career and life strategy consulting</li>
+                                <li><i class="fas fa-chevron-right text-purple-500 mr-2"></i>Team building and organizational development</li>
+                            </ul>
+                        </div>
+                        <a href="https://www.crossproducers.com" target="_blank" rel="noopener noreferrer"
+                           class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl transition transform hover:scale-105 inline-flex items-center justify-center gap-2 shadow-lg">
+                            <i class="fas fa-calendar-check text-xl"></i>
+                            <span>Request Professional Consultation</span>
+                        </a>
+                    </div>
+                    
                     <div class="bg-gradient-to-br from-green-50 to-teal-50 p-6 rounded-2xl">
                         <h2 class="text-xl font-bold text-green-700 mb-4 flex items-center">
                             <i class="fas fa-question-circle mr-3 text-2xl"></i>
