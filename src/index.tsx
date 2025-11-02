@@ -794,9 +794,16 @@ app.get('/', (c) => {
         <meta name="twitter:image" content="https://palm-reading-12apostles.pages.dev/og-image.png">
         
         <!-- Description Meta Tag -->
-        <meta name="description" content="The ForeSight Code - Decode the code of purpose engraved within you and design the future. Powered by CROSS Graph.">
+        <meta name="description" content="The ForeSight Code - Decode the code of purpose engraved within you and design the future.">
         
         <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+          tailwind.config = {
+            theme: {
+              extend: {}
+            }
+          }
+        </script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
         <style>
@@ -804,7 +811,7 @@ app.get('/', (c) => {
             font-family: 'Poppins', sans-serif;
           }
           body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 50%, #16213e 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
@@ -856,12 +863,12 @@ app.get('/', (c) => {
           }
           
           .hero-title {
-            background: linear-gradient(135deg, #d4af37 0%, #ffd700 50%, #ffed4e 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: fadeInUp 1s ease-out;
-            text-shadow: 0 4px 20px rgba(212, 175, 55, 0.5);
+            text-shadow: 0 4px 20px rgba(102, 126, 234, 0.6);
           }
           
           .subtitle {
@@ -968,7 +975,7 @@ app.get('/', (c) => {
             <!-- 言語切り替えボタン -->
             <div class="fixed top-4 right-4 z-50">
                 <button id="langSwitch" onclick="switchLanguage()" 
-                        class="bg-gradient-to-r from-yellow-600 to-yellow-500 hover:from-yellow-700 hover:to-yellow-600 text-black font-bold py-2 px-6 rounded-full transition transform hover:scale-105 shadow-lg">
+                        class="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-2 px-6 rounded-full transition transform hover:scale-105 shadow-lg">
                     <i class="fas fa-globe mr-2"></i>
                     <span class="lang-text">日本語</span>
                 </button>
@@ -984,16 +991,16 @@ app.get('/', (c) => {
                     <h2 class="hero-title hero-subtitle text-3xl md:text-4xl font-bold mb-6">
                         The Algorithm of Purpose
                     </h2>
-                    <p class="subtitle hero-description text-xl text-gray-300 mb-4 leading-relaxed font-semibold">
+                    <p class="subtitle hero-description text-xl text-gray-800 mb-4 leading-relaxed font-semibold">
                         The algorithm that moves your mission.
                     </p>
                     
                     <!-- コンセプトテキスト -->
-                    <div class="mt-8 bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-2xl border-2 border-yellow-600">
-                        <p class="concept-title text-lg text-yellow-500 mb-3 font-bold italic">
-                            What drives CROSS Graph is not technology.
+                    <div class="mt-8 bg-white/90 p-6 rounded-2xl border border-purple-200 backdrop-blur-sm shadow-lg">
+                        <p class="concept-title text-lg text-purple-900 mb-3 font-bold italic">
+                            What drives the era is not technology.
                         </p>
-                        <p class="concept-text text-gray-300 leading-relaxed">
+                        <p class="concept-text text-gray-700 leading-relaxed">
                             It is the code of purpose engraved within you. We decode that code and design the future.
                         </p>
                     </div>
@@ -1002,26 +1009,26 @@ app.get('/', (c) => {
                 <!-- ステップ1: 写真アップロード -->
                 <div id="step1" class="mb-8">
                     <h2 class="text-2xl font-bold mb-6 text-center">
-                        <span class="step-badge text-white rounded-full w-10 h-10 inline-flex items-center justify-center mr-3 text-lg">1</span>
-                        <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+                        <span class="step-badge text-white rounded-full w-10 h-10 inline-flex items-center justify-center mr-3 text-lg shadow-lg">1</span>
+                        <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent" data-translate="captureStep">
                             Capture Your Palm
                         </span>
                     </h2>
                     <div class="mb-6">
-                        <label class="block text-gray-700 mb-3 font-semibold text-lg">
-                            <i class="fas fa-user mr-2 text-purple-500"></i>Your Name
+                        <label class="block text-white mb-3 font-semibold text-lg">
+                            <i class="fas fa-user mr-2 text-yellow-400"></i><span data-translate="yourName">Your Name</span>
                         </label>
                         <input type="text" id="userName" placeholder="Enter your name" 
-                               class="input-field w-full px-6 py-4 rounded-2xl focus:outline-none text-lg">
+                               class="input-field w-full px-6 py-4 rounded-2xl focus:outline-none text-lg bg-white/95 text-gray-800">
                     </div>
                     <div class="mb-6">
-                        <label class="block text-gray-700 mb-3 font-semibold text-lg">
-                            <i class="fas fa-camera mr-2 text-purple-500"></i>Palm Photo
+                        <label class="block text-white mb-3 font-semibold text-lg">
+                            <i class="fas fa-camera mr-2 text-yellow-400"></i><span data-translate="palmPhoto">Palm Photo</span>
                         </label>
                         <div class="space-y-3">
                             <input type="file" id="palmImage" accept="image/*"
-                                   class="input-field w-full px-6 py-4 rounded-2xl focus:outline-none">
-                            <p class="text-sm text-gray-500 text-center">
+                                   class="input-field w-full px-6 py-4 rounded-2xl focus:outline-none bg-white/95 text-gray-800">
+                            <p class="text-sm text-gray-200 text-center">
                                 <i class="fas fa-info-circle mr-1"></i>
                                 Choose from camera or album
                             </p>
@@ -1030,9 +1037,9 @@ app.get('/', (c) => {
                     <div id="previewContainer" class="mb-6 text-center hidden">
                         <img id="preview" alt="Preview">
                     </div>
-                    <button id="analyzeBtn" class="btn-primary w-full text-white font-bold py-4 px-8 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed text-lg relative z-10">
+                    <button id="analyzeBtn" class="btn-primary w-full text-white font-bold py-4 px-8 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed text-lg relative z-10 shadow-xl">
                         <i class="fas fa-sparkles mr-2"></i>
-                        Discover My Type
+                        <span data-translate="discoverBtn">Discover My Code</span>
                     </button>
                 </div>
 

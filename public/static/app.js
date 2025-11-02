@@ -9,7 +9,7 @@ const translations = {
         title: 'The ForeSight Code',
         subtitle: 'The Algorithm of Purpose',
         description: 'The algorithm that moves your mission.',
-        conceptTitle: 'What drives CROSS Graph is not technology.',
+        conceptTitle: 'What drives the era is not technology.',
         conceptText: 'It is the code of purpose engraved within you. We decode that code and design the future.',
         yourName: 'Your Name',
         enterName: 'Enter your name',
@@ -32,7 +32,7 @@ const translations = {
         title: 'The ForeSight Code',
         subtitle: '使命のアルゴリズム',
         description: 'あなたの使命を動かすアルゴリズム。',
-        conceptTitle: 'CROSS Graphを動かすのは、テクノロジーではない。',
+        conceptTitle: '時代を動かすのは、テクノロジーではない。',
         conceptText: 'それは、あなたの中に刻まれた使命のコードだ。私たちは、そのコードを解読し、未来を設計する。',
         yourName: 'お名前',
         enterName: 'お名前を入力',
@@ -111,28 +111,37 @@ async function loadApostleTypes() {
         const types = response.data;
         
         const container = document.getElementById('apostleTypes');
-        container.innerHTML = types.map(type => `
+        container.innerHTML = types.map(type => {
+            // 言語に応じて名前と説明を切り替え
+            const name = currentLang === 'ja' ? type.name_ja : type.name_en;
+            const nameParts = name.split(' - ');
+            const description = currentLang === 'ja' ? (type.description_ja || type.description) : (type.description_en || type.description);
+            const characteristics = currentLang === 'ja' ? (type.characteristics_ja || type.characteristics) : (type.characteristics_en || type.characteristics);
+            const strengths = currentLang === 'ja' ? (type.strengths_ja || type.strengths) : (type.strengths_en || type.strengths);
+            
+            return `
             <div class="apostle-card p-6 rounded-3xl shadow-lg border-2 border-purple-200">
                 <div class="text-5xl text-center mb-4 icon-float">${type.icon}</div>
                 <h3 class="text-xl font-bold mb-2 text-center bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-                    ${type.name_en.split(' - ')[0]}
+                    ${nameParts[0]}
                 </h3>
                 <p class="text-sm text-gray-500 mb-3 text-center font-semibold">
-                    ${type.name_en.split(' - ')[1] || type.name_en}
+                    ${nameParts[1] || nameParts[0]}
                 </p>
-                <p class="text-gray-600 mb-4 text-sm leading-relaxed">${type.description}</p>
+                <p class="text-gray-600 mb-4 text-sm leading-relaxed">${description}</p>
                 <div class="text-xs space-y-2 bg-purple-50 p-3 rounded-xl">
                     <p class="flex items-start">
                         <span class="text-purple-600 mr-2">✨</span>
-                        <span><strong>Traits:</strong> ${type.characteristics}</span>
+                        <span><strong>${currentLang === 'ja' ? '特性' : 'Traits'}:</strong> ${characteristics}</span>
                     </p>
                     <p class="flex items-start">
                         <span class="text-purple-600 mr-2">💪</span>
-                        <span><strong>Strengths:</strong> ${type.strengths}</span>
+                        <span><strong>${currentLang === 'ja' ? '強み' : 'Strengths'}:</strong> ${strengths}</span>
                     </p>
                 </div>
             </div>
-        `).join('');
+            `;
+        }).join('');
     } catch (error) {
         console.error('Error loading apostle types:', error);
     }
@@ -230,46 +239,56 @@ async function analyzePalm() {
 function displayResult(data) {
     const { apostleType, confidence, analysisDetails } = data;
     
+    // 言語に応じて表示内容を切り替え
+    const name = currentLang === 'ja' ? apostleType.name_ja : apostleType.name_en;
+    const nameParts = name.split(' - ');
+    const description = currentLang === 'ja' ? (apostleType.description_ja || apostleType.description) : (apostleType.description_en || apostleType.description);
+    const characteristics = currentLang === 'ja' ? (apostleType.characteristics_ja || apostleType.characteristics) : (apostleType.characteristics_en || apostleType.characteristics);
+    const strengths = currentLang === 'ja' ? (apostleType.strengths_ja || apostleType.strengths) : (apostleType.strengths_en || apostleType.strengths);
+    const detailedPersonality = currentLang === 'ja' ? (apostleType.detailed_personality_ja || apostleType.detailed_personality || description) : (apostleType.detailed_personality_en || apostleType.detailed_personality || description);
+    
+    const t = translations[currentLang];
+    
     const resultHTML = `
         <div class="bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50 p-8 md:p-10 rounded-3xl mb-6 border-2 border-purple-200">
             <div class="text-7xl text-center mb-6 icon-float">${apostleType.icon}</div>
             <h3 class="text-4xl font-extrabold text-center mb-3">
                 <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-                    ${apostleType.name_en.split(' - ')[0]}
+                    ${nameParts[0]}
                 </span>
             </h3>
             <p class="text-xl text-center mb-2 font-semibold text-gray-600">
-                ${apostleType.name_en.split(' - ')[1] || apostleType.name_en}
+                ${nameParts[1] || nameParts[0]}
             </p>
-            <p class="text-lg text-gray-600 mb-6 text-center leading-relaxed">${apostleType.description}</p>
+            <p class="text-lg text-gray-600 mb-6 text-center leading-relaxed">${description}</p>
             
             <!-- 詳細な性格分析 -->
             <div class="bg-white p-6 rounded-2xl shadow-lg mb-4 border-2 border-purple-100">
                 <h4 class="text-2xl font-bold mb-4 flex items-center justify-center">
                     <span class="text-3xl mr-2">🌟</span>
                     <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-                        Detailed Personality Analysis
+                        ${currentLang === 'ja' ? '詳細な性格分析' : 'Detailed Personality Analysis'}
                     </span>
                 </h4>
                 <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-5 rounded-xl mb-4">
                     <p class="text-gray-700 leading-relaxed text-base">
-                        ${apostleType.detailed_personality || apostleType.description}
+                        ${detailedPersonality}
                     </p>
                 </div>
                 <div class="space-y-3 text-gray-700">
                     <p class="flex items-start bg-purple-50 p-3 rounded-xl">
                         <span class="text-purple-600 mr-2 mt-1">💫</span>
-                        <span><strong>Key Traits:</strong> ${apostleType.characteristics}</span>
+                        <span><strong>${currentLang === 'ja' ? '主な特性' : 'Key Traits'}:</strong> ${characteristics}</span>
                     </p>
                     <p class="flex items-start bg-pink-50 p-3 rounded-xl">
                         <span class="text-pink-600 mr-2 mt-1">💪</span>
-                        <span><strong>Core Strengths:</strong> ${apostleType.strengths}</span>
+                        <span><strong>${currentLang === 'ja' ? 'コアな強み' : 'Core Strengths'}:</strong> ${strengths}</span>
                     </p>
                 </div>
                 <div class="mt-4 pt-4 border-t border-gray-200 text-center">
                     <p class="text-sm text-gray-600 font-semibold">
                         <i class="fas fa-chart-line mr-2 text-purple-500"></i>
-                        Analysis Accuracy: ${(confidence * 100).toFixed(1)}%
+                        ${currentLang === 'ja' ? '分析精度' : 'Analysis Accuracy'}: ${(confidence * 100).toFixed(1)}%
                     </p>
                 </div>
             </div>
@@ -278,14 +297,14 @@ function displayResult(data) {
                 <h4 class="text-xl font-bold mb-4 flex items-center justify-center">
                     <span class="text-2xl mr-2">🤲</span>
                     <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-                        Palm Analysis
+                        ${currentLang === 'ja' ? '手相分析' : 'Palm Analysis'}
                     </span>
                 </h4>
                 <div class="space-y-3 text-gray-700 text-sm">
-                    <p class="bg-purple-50 p-3 rounded-xl"><strong>Heart Line:</strong> ${analysisDetails.heart_line}</p>
-                    <p class="bg-blue-50 p-3 rounded-xl"><strong>Head Line:</strong> ${analysisDetails.head_line}</p>
-                    <p class="bg-green-50 p-3 rounded-xl"><strong>Life Line:</strong> ${analysisDetails.life_line}</p>
-                    <p class="bg-pink-50 p-3 rounded-xl"><strong>Fate Line:</strong> ${analysisDetails.fate_line}</p>
+                    <p class="bg-purple-50 p-3 rounded-xl"><strong>${currentLang === 'ja' ? '感情線' : 'Heart Line'}:</strong> ${analysisDetails.heart_line}</p>
+                    <p class="bg-blue-50 p-3 rounded-xl"><strong>${currentLang === 'ja' ? '知能線' : 'Head Line'}:</strong> ${analysisDetails.head_line}</p>
+                    <p class="bg-green-50 p-3 rounded-xl"><strong>${currentLang === 'ja' ? '生命線' : 'Life Line'}:</strong> ${analysisDetails.life_line}</p>
+                    <p class="bg-pink-50 p-3 rounded-xl"><strong>${currentLang === 'ja' ? '運命線' : 'Fate Line'}:</strong> ${analysisDetails.fate_line}</p>
                 </div>
             </div>
             
@@ -294,7 +313,7 @@ function displayResult(data) {
                 <h4 class="text-2xl font-bold mb-6 flex items-center justify-center">
                     <span class="text-3xl mr-2">🔮</span>
                     <span class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                        Your Future Path (2026-2050)
+                        ${currentLang === 'ja' ? 'あなたの未来予測 (2026-2050)' : 'Your Future Path (2026-2050)'}
                     </span>
                 </h4>
                 
@@ -304,7 +323,7 @@ function displayResult(data) {
                         <span class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-2 rounded-full text-sm font-bold mr-3">
                             2026 - 2028
                         </span>
-                        <span class="text-gray-600 font-semibold">Near Future</span>
+                        <span class="text-gray-600 font-semibold">${currentLang === 'ja' ? '近未来' : 'Near Future'}</span>
                     </div>
                     <div class="bg-white p-4 rounded-xl border-l-4 border-blue-400">
                         <p class="text-gray-700 leading-relaxed text-sm">
@@ -319,7 +338,7 @@ function displayResult(data) {
                         <span class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-bold mr-3">
                             2029 - 2035
                         </span>
-                        <span class="text-gray-600 font-semibold">Mid-term Future</span>
+                        <span class="text-gray-600 font-semibold">${currentLang === 'ja' ? '中期未来' : 'Mid-term Future'}</span>
                     </div>
                     <div class="bg-white p-4 rounded-xl border-l-4 border-purple-400">
                         <p class="text-gray-700 leading-relaxed text-sm">
@@ -334,7 +353,7 @@ function displayResult(data) {
                         <span class="bg-gradient-to-r from-pink-500 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold mr-3">
                             2036 - 2050
                         </span>
-                        <span class="text-gray-600 font-semibold">Long-term Future</span>
+                        <span class="text-gray-600 font-semibold">${currentLang === 'ja' ? '長期未来' : 'Long-term Future'}</span>
                     </div>
                     <div class="bg-white p-4 rounded-xl border-l-4 border-pink-400">
                         <p class="text-gray-700 leading-relaxed text-sm">
@@ -346,7 +365,7 @@ function displayResult(data) {
                 <div class="mt-5 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-orange-200">
                     <p class="text-sm text-gray-600 text-center">
                         <i class="fas fa-lightbulb mr-2 text-orange-500"></i>
-                        <strong>Note:</strong> This forecast is based on current macro social trends and your personality analysis.
+                        <strong>${currentLang === 'ja' ? '注意' : 'Note'}:</strong> ${currentLang === 'ja' ? 'この予測は、現在のマクロ社会トレンドとあなたの性格分析に基づいています。' : 'This forecast is based on current macro social trends and your personality analysis.'}
                     </p>
                 </div>
             </div>
@@ -355,7 +374,7 @@ function displayResult(data) {
                 <h4 class="text-xl font-bold mb-4 flex items-center justify-center">
                     <span class="text-2xl mr-2">💕</span>
                     <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-                        Compatible Types
+                        ${currentLang === 'ja' ? '相性の良いタイプ' : 'Compatible Types'}
                     </span>
                 </h4>
                 <p class="text-gray-700 text-center leading-relaxed">
@@ -369,7 +388,7 @@ function displayResult(data) {
             <h4 class="text-xl font-bold mb-4 text-center">
                 <span class="text-2xl mr-2">📢</span>
                 <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-                    Share Your Result
+                    ${currentLang === 'ja' ? '診断結果をシェア' : 'Share Your Result'}
                 </span>
             </h4>
             <div class="flex flex-wrap gap-3 justify-center">
@@ -387,7 +406,7 @@ function displayResult(data) {
                 </button>
                 <button onclick="copyToClipboard()" class="flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-xl transition transform hover:scale-105">
                     <i class="fas fa-link text-xl"></i>
-                    <span>Copy Link</span>
+                    <span>${currentLang === 'ja' ? 'リンクをコピー' : 'Copy Link'}</span>
                 </button>
             </div>
         </div>
@@ -397,15 +416,15 @@ function displayResult(data) {
             <h4 class="text-xl font-bold mb-3 text-center">
                 <span class="text-2xl mr-2">👥</span>
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    Team Formation
+                    ${currentLang === 'ja' ? 'チーム形成' : 'Team Formation'}
                 </span>
             </h4>
             <p class="text-gray-700 text-center mb-4">
-                Find the perfect team with balanced personality types!
+                ${currentLang === 'ja' ? 'バランスの取れたチームを見つけよう！' : 'Find the perfect team with balanced personality types!'}
             </p>
             <button onclick="autoMatchTeam()" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl transition transform hover:scale-105">
                 <i class="fas fa-users mr-2"></i>
-                Find My Team Now!
+                ${currentLang === 'ja' ? '今すぐチームを見つける！' : 'Find My Team Now!'}
             </button>
         </div>
     `;
