@@ -820,11 +820,11 @@ app.get('/team/:teamId', async (c) => {
 app.get('/terms', (c) => {
   return c.html(`
     <!DOCTYPE html>
-    <html lang="en">
+    <html lang="ja">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Terms of Service - The 12 Apostles Palm Reading</title>
+        <title>利用規約 - The ForeSight Code</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -847,80 +847,80 @@ app.get('/terms', (c) => {
             <div class="card p-8 md:p-12 max-w-4xl mx-auto">
                 <h1 class="text-4xl font-extrabold text-center mb-8">
                     <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-                        Terms of Service
+                        利用規約
                     </span>
                 </h1>
                 
                 <div class="prose prose-lg max-w-none text-gray-700">
-                    <p class="text-sm text-gray-500 mb-6">Last Updated: November 2, 2025</p>
+                    <p class="text-sm text-gray-500 mb-6">最終更新日: 2025年11月2日</p>
                     
                     <section class="mb-8">
-                        <h2 class="text-2xl font-bold text-purple-700 mb-4">1. Acceptance of Terms</h2>
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">1. 利用規約の同意</h2>
                         <p class="mb-4">
-                            By accessing and using The 12 Apostles Palm Reading service ("Service"), you accept and agree to be bound by the terms and provision of this agreement.
+                            The ForeSight Code手相診断サービス（以下「本サービス」）にアクセスし使用することにより、お客様は本規約の条件に同意したものとみなされます。
                         </p>
                     </section>
                     
                     <section class="mb-8">
-                        <h2 class="text-2xl font-bold text-purple-700 mb-4">2. Service Description</h2>
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">2. サービスの説明</h2>
                         <p class="mb-4">
-                            The 12 Apostles Palm Reading is an entertainment service that analyzes palm images and provides personality type assessments based on the 12 Apostles archetypes. This service is for entertainment purposes only and should not be considered as professional advice.
+                            The ForeSight Codeは、手相画像を分析し、12使徒のアーキタイプに基づいた性格タイプ診断を提供するエンターテイメントサービスです。本サービスは娯楽目的のみであり、専門的なアドバイスとして考慮すべきではありません。
                         </p>
                     </section>
                     
                     <section class="mb-8">
-                        <h2 class="text-2xl font-bold text-purple-700 mb-4">3. User Data and Privacy</h2>
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">3. ユーザーデータとプライバシー</h2>
                         <ul class="list-disc pl-6 mb-4 space-y-2">
-                            <li>We collect palm images and user names to provide the service</li>
-                            <li>Your data is stored securely using Cloudflare D1 database</li>
-                            <li>We do not share your personal information with third parties</li>
-                            <li>You can request deletion of your data by contacting us</li>
+                            <li>サービス提供のため、手相画像とユーザー名を収集します</li>
+                            <li>お客様のデータはCloudflare D1データベースを使用して安全に保存されます</li>
+                            <li>お客様の個人情報を第三者と共有することはありません</li>
+                            <li>お問い合わせいただくことで、データの削除をリクエストできます</li>
                         </ul>
                     </section>
                     
                     <section class="mb-8">
-                        <h2 class="text-2xl font-bold text-purple-700 mb-4">4. User Conduct</h2>
-                        <p class="mb-4">You agree not to:</p>
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">4. ユーザーの行動規範</h2>
+                        <p class="mb-4">以下の行為を行わないことに同意していただきます：</p>
                         <ul class="list-disc pl-6 mb-4 space-y-2">
-                            <li>Upload inappropriate or offensive content</li>
-                            <li>Attempt to hack or disrupt the service</li>
-                            <li>Use the service for any illegal purposes</li>
-                            <li>Impersonate others or provide false information</li>
+                            <li>不適切または攻撃的なコンテンツのアップロード</li>
+                            <li>サービスへのハッキングや妨害の試み</li>
+                            <li>違法な目的でのサービスの使用</li>
+                            <li>他者のなりすましや虚偽情報の提供</li>
                         </ul>
                     </section>
                     
                     <section class="mb-8">
-                        <h2 class="text-2xl font-bold text-purple-700 mb-4">5. Intellectual Property</h2>
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">5. 知的財産権</h2>
                         <p class="mb-4">
-                            All content, features, and functionality of the Service are owned by CROSS Business Producers Inc and are protected by international copyright, trademark, and other intellectual property laws.
+                            本サービスのすべてのコンテンツ、機能、および機能性は、CROSS Business Producers Incが所有しており、国際的な著作権、商標、その他の知的財産法によって保護されています。
                         </p>
                     </section>
                     
                     <section class="mb-8">
-                        <h2 class="text-2xl font-bold text-purple-700 mb-4">6. Disclaimer of Warranties</h2>
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">6. 保証の免責</h2>
                         <p class="mb-4">
-                            The Service is provided "as is" without warranties of any kind. We do not guarantee that the service will be uninterrupted, secure, or error-free. The personality analysis is for entertainment purposes only.
+                            本サービスは「現状のまま」提供され、いかなる種類の保証もありません。サービスが中断されず、安全で、エラーがないことを保証するものではありません。性格分析は娯楽目的のみです。
                         </p>
                     </section>
                     
                     <section class="mb-8">
-                        <h2 class="text-2xl font-bold text-purple-700 mb-4">7. Limitation of Liability</h2>
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">7. 責任の制限</h2>
                         <p class="mb-4">
-                            CROSS Business Producers Inc shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of the Service.
+                            CROSS Business Producers Incは、本サービスの使用から生じる間接的、偶発的、特別、結果的、または懲罰的損害について責任を負いません。
                         </p>
                     </section>
                     
                     <section class="mb-8">
-                        <h2 class="text-2xl font-bold text-purple-700 mb-4">8. Changes to Terms</h2>
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">8. 規約の変更</h2>
                         <p class="mb-4">
-                            We reserve the right to modify these terms at any time. Changes will be effective immediately upon posting to the Service.
+                            当社は、いつでもこれらの規約を変更する権利を留保します。変更は本サービスに掲載された時点で直ちに有効になります。
                         </p>
                     </section>
                     
                     <section class="mb-8">
-                        <h2 class="text-2xl font-bold text-purple-700 mb-4">9. Contact Information</h2>
+                        <h2 class="text-2xl font-bold text-purple-700 mb-4">9. お問い合わせ先</h2>
                         <p class="mb-4">
-                            For questions about these Terms of Service, please contact us through our <a href="/contact" class="text-purple-600 hover:text-purple-700 font-semibold">Contact Page</a>.
+                            本利用規約に関するご質問は、<a href="/contact" class="text-purple-600 hover:text-purple-700 font-semibold">お問い合わせページ</a>からお問い合わせください。
                         </p>
                     </section>
                 </div>
@@ -928,7 +928,7 @@ app.get('/terms', (c) => {
                 <div class="mt-8 text-center">
                     <a href="/" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-xl transition transform hover:scale-105 inline-block">
                         <i class="fas fa-home mr-2"></i>
-                        Back to Home
+                        ホームに戻る
                     </a>
                 </div>
             </div>
@@ -961,11 +961,11 @@ app.get('/terms', (c) => {
 app.get('/contact', (c) => {
   return c.html(`
     <!DOCTYPE html>
-    <html lang="en">
+    <html lang="ja">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Contact Us - The 12 Apostles Palm Reading</title>
+        <title>お問い合わせ - The ForeSight Code</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -990,11 +990,11 @@ app.get('/contact', (c) => {
                     <div class="text-6xl mb-4">📧</div>
                     <h1 class="text-4xl font-extrabold mb-4">
                         <span class="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-                            Contact Us
+                            お問い合わせ
                         </span>
                     </h1>
                     <p class="text-gray-600 text-lg">
-                        We'd love to hear from you!
+                        お気軽にお問い合わせください！
                     </p>
                 </div>
                 
@@ -1002,11 +1002,11 @@ app.get('/contact', (c) => {
                     <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-2xl">
                         <h2 class="text-xl font-bold text-purple-700 mb-4 flex items-center">
                             <i class="fas fa-building mr-3 text-2xl"></i>
-                            Company Information
+                            会社情報
                         </h2>
                         <div class="text-gray-700 space-y-2">
-                            <p><strong>Company Name:</strong> CROSS Business Producers Inc</p>
-                            <p><strong>Website:</strong> 
+                            <p><strong>会社名:</strong> CROSS Business Producers Inc</p>
+                            <p><strong>ウェブサイト:</strong> 
                                 <a href="https://www.crossproducers.com" target="_blank" rel="noopener noreferrer" 
                                    class="text-purple-600 hover:text-purple-700 font-semibold">
                                     www.crossproducers.com
@@ -1019,14 +1019,14 @@ app.get('/contact', (c) => {
                     <div class="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-2xl">
                         <h2 class="text-xl font-bold text-blue-700 mb-4 flex items-center">
                             <i class="fas fa-envelope mr-3 text-2xl"></i>
-                            Get in Touch
+                            お問い合わせ
                         </h2>
                         <p class="text-gray-700 mb-4">
-                            For inquiries about The 12 Apostles Palm Reading service, please visit our company website or reach out through the contact form available there.
+                            The ForeSight Code手相診断サービスに関するお問い合わせは、当社ウェブサイトをご覧いただくか、そちらのお問い合わせフォームからお問い合わせください。
                         </p>
                         <a href="https://www.crossproducers.com" target="_blank" rel="noopener noreferrer"
                            class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-6 rounded-xl transition transform hover:scale-105 inline-flex items-center gap-2">
-                            <span>Visit Company Website</span>
+                            <span>会社ウェブサイトを訪問</span>
                             <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -1034,40 +1034,40 @@ app.get('/contact', (c) => {
                     <div class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6 rounded-2xl border-2 border-indigo-300">
                         <h2 class="text-xl font-bold text-indigo-700 mb-4 flex items-center">
                             <i class="fas fa-star mr-3 text-2xl"></i>
-                            Professional Consultation Services
+                            プロフェッショナルコンサルテーションサービス
                         </h2>
                         <p class="text-gray-700 mb-4 leading-relaxed">
-                            Interested in deeper personality analysis, specific future predictions, or personalized career guidance? Our expert team offers professional consultation services tailored to your needs.
+                            より深い性格分析、具体的な未来予測、パーソナライズされたキャリアガイダンスにご興味はありませんか？当社の専門チームが、お客様のニーズに合わせたプロフェッショナルなコンサルテーションサービスを提供しています。
                         </p>
                         <div class="bg-white p-4 rounded-xl mb-4">
                             <h3 class="font-bold text-purple-700 mb-2 flex items-center">
                                 <i class="fas fa-sparkles mr-2"></i>
-                                What We Offer:
+                                提供サービス:
                             </h3>
                             <ul class="text-gray-700 space-y-2 text-sm">
-                                <li><i class="fas fa-chevron-right text-purple-500 mr-2"></i>In-depth personality analysis</li>
-                                <li><i class="fas fa-chevron-right text-purple-500 mr-2"></i>Detailed future path predictions (2026-2050)</li>
-                                <li><i class="fas fa-chevron-right text-purple-500 mr-2"></i>Career and life strategy consulting</li>
-                                <li><i class="fas fa-chevron-right text-purple-500 mr-2"></i>Team building and organizational development</li>
+                                <li><i class="fas fa-chevron-right text-purple-500 mr-2"></i>詳細な性格分析</li>
+                                <li><i class="fas fa-chevron-right text-purple-500 mr-2"></i>将来のキャリアパス予測（2026年〜2050年）</li>
+                                <li><i class="fas fa-chevron-right text-purple-500 mr-2"></i>キャリアと人生戦略コンサルティング</li>
+                                <li><i class="fas fa-chevron-right text-purple-500 mr-2"></i>チームビルディングと組織開発</li>
                             </ul>
                         </div>
                         <a href="https://www.crossproducers.com" target="_blank" rel="noopener noreferrer"
                            class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl transition transform hover:scale-105 inline-flex items-center justify-center gap-2 shadow-lg">
                             <i class="fas fa-calendar-check text-xl"></i>
-                            <span>Request Professional Consultation</span>
+                            <span>プロフェッショナルコンサルテーションを依頼</span>
                         </a>
                     </div>
                     
                     <div class="bg-gradient-to-br from-green-50 to-teal-50 p-6 rounded-2xl">
                         <h2 class="text-xl font-bold text-green-700 mb-4 flex items-center">
                             <i class="fas fa-question-circle mr-3 text-2xl"></i>
-                            Common Inquiries
+                            よくあるお問い合わせ
                         </h2>
                         <ul class="text-gray-700 space-y-2">
-                            <li><i class="fas fa-check text-green-600 mr-2"></i>Service questions and technical support</li>
-                            <li><i class="fas fa-check text-green-600 mr-2"></i>Privacy and data deletion requests</li>
-                            <li><i class="fas fa-check text-green-600 mr-2"></i>Partnership and business inquiries</li>
-                            <li><i class="fas fa-check text-green-600 mr-2"></i>Feedback and suggestions</li>
+                            <li><i class="fas fa-check text-green-600 mr-2"></i>サービスに関するご質問と技術サポート</li>
+                            <li><i class="fas fa-check text-green-600 mr-2"></i>プライバシーとデータ削除リクエスト</li>
+                            <li><i class="fas fa-check text-green-600 mr-2"></i>パートナーシップとビジネスに関するお問い合わせ</li>
+                            <li><i class="fas fa-check text-green-600 mr-2"></i>フィードバックとご提案</li>
                         </ul>
                     </div>
                 </div>
@@ -1075,7 +1075,7 @@ app.get('/contact', (c) => {
                 <div class="text-center">
                     <a href="/" class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-bold py-3 px-8 rounded-xl transition transform hover:scale-105 inline-block">
                         <i class="fas fa-home mr-2"></i>
-                        Back to Home
+                        ホームに戻る
                     </a>
                 </div>
             </div>

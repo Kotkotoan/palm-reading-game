@@ -26,7 +26,15 @@ const translations = {
         findTeam: 'Find My Team Now!',
         meetTitle: 'Meet The 12 Codes',
         meetDesc: 'Discover all purpose archetypes 🌟',
-        switchLang: '日本語'
+        switchLang: '日本語',
+        'footer.terms': 'Terms of Service',
+        'footer.contact': 'Contact Us',
+        'terms.title': 'Terms of Service',
+        'terms.lastUpdated': 'Last Updated',
+        'terms.backHome': 'Back to Home',
+        'contact.title': 'Contact Us',
+        'contact.subtitle': "We'd love to hear from you!",
+        'contact.backHome': 'Back to Home'
     },
     ja: {
         title: 'The ForeSight Code',
@@ -49,7 +57,15 @@ const translations = {
         findTeam: '今すぐチームを見つける！',
         meetTitle: '12のコードを知る',
         meetDesc: '全ての使命のアーキタイプを見る 🌟',
-        switchLang: 'English'
+        switchLang: 'English',
+        'footer.terms': '利用規約',
+        'footer.contact': 'お問い合わせ',
+        'terms.title': '利用規約',
+        'terms.lastUpdated': '最終更新日',
+        'terms.backHome': 'ホームに戻る',
+        'contact.title': 'お問い合わせ',
+        'contact.subtitle': 'お気軽にお問い合わせください！',
+        'contact.backHome': 'ホームに戻る'
     }
 };
 
